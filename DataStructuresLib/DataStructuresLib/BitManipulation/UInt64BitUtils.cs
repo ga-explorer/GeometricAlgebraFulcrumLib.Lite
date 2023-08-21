@@ -1358,7 +1358,13 @@ namespace DataStructuresLib.BitManipulation
             //    bitPattern >>= 1;
             //}
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> PatternToMappedPositions<T>(this ulong bitPattern, Func<int, T> indexMapping)
+        {
+            return bitPattern.PatternToPositions().Select(indexMapping);
+        }
+
         /// <summary>
         /// Returns a list of bit positions where ones are present in the given bit pattern
         /// </summary>
