@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Frames.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
@@ -72,7 +72,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes.Curves
 
         public Float64Vector3D Tangent { get; }
 
-        public double ParameterValue { get; private set; }
+        public Float64Scalar ParameterValue { get; private set; }
 
         public Color Color { get; set; }
 

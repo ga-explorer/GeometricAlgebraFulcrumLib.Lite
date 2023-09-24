@@ -7,6 +7,7 @@ using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multivectors.Composers;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Processors;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using Open.Collections;
 
 namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multivectors
@@ -113,6 +114,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         public override bool IsBivector()
         {
             return IsZero || _idScalarDictionary.Keys.All(id => id.Grade() == 2);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsTrivector()
+        {
+            return IsZero || _idScalarDictionary.Keys.All(id => id.Grade() == 3);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -350,6 +357,45 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
                 .SetTerms(_idScalarDictionary.Where(p => p.Key.Grade() == 1))
                 .GetVector();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc)
+        {
+            return Processor
+                .CreateComposer()
+                .SetTerms(_idScalarDictionary.Where(p => 
+                        p.Key.Grade() == 1 &&
+                        filterFunc(p.Key.FirstOneBitPosition())
+                    )
+                )
+                .GetVector();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<double, bool> filterFunc)
+        {
+            return Processor
+                .CreateComposer()
+                .SetTerms(_idScalarDictionary.Where(p => 
+                        p.Key.Grade() == 1 &&
+                        filterFunc(p.Value)
+                    )
+                )
+                .GetVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, double, bool> filterFunc)
+        {
+            return Processor
+                .CreateComposer()
+                .SetTerms(_idScalarDictionary.Where(p => 
+                        p.Key.Grade() == 1 &&
+                        filterFunc(p.Key.FirstOneBitPosition(), p.Value)
+                    )
+                )
+                .GetVector();
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Bivector GetBivectorPart()
@@ -418,6 +464,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
                 .CreateComposer()
                 .SetTerms(idScalarPairs)
                 .GetUniformMultivector();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public RGaFloat64Multivector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

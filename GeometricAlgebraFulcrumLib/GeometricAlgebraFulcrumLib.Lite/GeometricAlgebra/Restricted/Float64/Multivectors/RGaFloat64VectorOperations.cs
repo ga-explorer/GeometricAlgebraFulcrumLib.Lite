@@ -404,25 +404,45 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RGaFloat64Vector DivideByENorm()
         {
-            return Divide(ENorm().ScalarValue());
+            var norm = ENorm().ScalarValue();
+
+            if (norm.IsZero()) 
+                throw new InvalidOperationException();
+
+            return Times(1d / norm);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RGaFloat64Vector DivideByENormSquared()
         {
-            return Divide(ENormSquared().ScalarValue());
+            var normSquared = ENormSquared().ScalarValue();
+
+            if (normSquared.IsZero()) 
+                throw new InvalidOperationException();
+
+            return Times(1d / normSquared);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RGaFloat64Vector DivideByNorm()
         {
-            return Divide(Norm().ScalarValue());
+            var norm = Norm().ScalarValue();
+
+            if (norm.IsZero()) 
+                throw new InvalidOperationException();
+
+            return Times(1d / norm);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RGaFloat64Vector DivideByNormSquared()
         {
-            return Divide(NormSquared().ScalarValue());
+            var normSquared = NormSquared().ScalarValue();
+
+            if (normSquared.IsZero()) 
+                throw new InvalidOperationException();
+
+            return Times(1d / normSquared);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

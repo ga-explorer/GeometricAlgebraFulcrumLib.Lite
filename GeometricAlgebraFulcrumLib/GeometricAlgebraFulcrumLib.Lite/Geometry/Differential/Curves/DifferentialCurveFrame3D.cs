@@ -39,6 +39,22 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DifferentialCurveFrame3D Create(double parameterValue, IFloat64Vector3D origin, IFloat64Vector3D direction1, IPair<IFloat64Vector3D> direction23Pair)
+        {
+            Debug.Assert(
+                !direction1.ENormSquared().IsAlmostZero()
+            );
+
+            return new DifferentialCurveFrame3D(
+                parameterValue,
+                origin.ToVector3D(),
+                direction1.ToVector3D(),
+                direction23Pair.Item1.ToVector3D(),
+                direction23Pair.Item2.ToVector3D()
+            );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DifferentialCurveFrame3D Create(double parameterValue, IFloat64Vector3D origin, IFloat64Vector3D direction1, IFloat64Vector3D direction2, IFloat64Vector3D direction3)
         {
             Debug.Assert(

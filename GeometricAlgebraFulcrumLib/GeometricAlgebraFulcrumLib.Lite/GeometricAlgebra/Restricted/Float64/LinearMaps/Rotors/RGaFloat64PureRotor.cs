@@ -117,13 +117,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
         {
             return Multivector.Gp(mv).Gp(MultivectorReverse).GetHigherKVectorPart(mv.Grade);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override RGaFloat64KVector OmMap(RGaFloat64KVector mv)
-        {
-            return Multivector.Gp(mv).Gp(MultivectorReverse).GetKVectorPart(mv.Grade);
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Multivector OmMap(RGaFloat64Multivector mv)
         {

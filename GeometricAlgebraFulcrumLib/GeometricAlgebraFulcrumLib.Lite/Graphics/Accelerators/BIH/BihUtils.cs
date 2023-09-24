@@ -15,6 +15,7 @@ using GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space3D.Traversal;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using TextComposerLib.Text.Linear;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH
@@ -977,11 +978,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH
             return AccBihLineTraverser2D<T>.Create(
                 bih,
                 line,
-                Float64Range1D.Create(lineParamValue1, lineParamValue2)
+                Float64ScalarRange.Create(lineParamValue1, lineParamValue2)
             );
         }
 
-        public static AccBihLineTraverser2D<T> GetLineTraverser<T>(this IAccBih2D<T> bih, ILine2D line, Float64Range1D lineParamRange)
+        public static AccBihLineTraverser2D<T> GetLineTraverser<T>(this IAccBih2D<T> bih, ILine2D line, Float64ScalarRange lineParamRange)
             where T : IFiniteGeometricShape2D
         {
             return AccBihLineTraverser2D<T>.Create(
@@ -1163,11 +1164,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH
             return AccBihLineTraverser3D<T>.Create(
                 bih,
                 line,
-                Float64Range1D.Create(lineParamValue1, lineParamValue2)
+                Float64ScalarRange.Create(lineParamValue1, lineParamValue2)
             );
         }
 
-        public static AccBihLineTraverser3D<T> GetLineTraverser<T>(this IAccBih3D<T> bih, ILine3D line, Float64Range1D lineParamRange)
+        public static AccBihLineTraverser3D<T> GetLineTraverser<T>(this IAccBih3D<T> bih, ILine3D line, Float64ScalarRange lineParamRange)
             where T : IFiniteGeometricShape3D
         {
             return AccBihLineTraverser3D<T>.Create(

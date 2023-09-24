@@ -1,5 +1,5 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable
 {
@@ -17,7 +17,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable
             );
         }
 
-        public static LimitedLine2D Create(IFloat64Vector2D origin, IFloat64Vector2D direction, Float64Range1D parameterLimits)
+        public static LimitedLine2D Create(IFloat64Vector2D origin, IFloat64Vector2D direction, Float64ScalarRange parameterLimits)
         {
             return new LimitedLine2D(
                 origin.X,

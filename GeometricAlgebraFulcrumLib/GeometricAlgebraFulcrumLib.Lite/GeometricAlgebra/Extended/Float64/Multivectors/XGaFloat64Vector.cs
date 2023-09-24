@@ -197,6 +197,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
 
             return Processor.CreateVector(idScalarDictionary);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public XGaFloat64Vector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
+        }
 
 
         public override IEnumerable<XGaBasisBlade> BasisBlades
@@ -211,8 +224,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override double GetBasisBladeScalar(IIndexSet basisBladeId)
         {
-            return basisBladeId.IsSingleIndexSet &&
-                   _idScalarDictionary.TryGetValue(basisBladeId, out var scalar)
+            return _idScalarDictionary.TryGetValue(basisBladeId, out var scalar)
                 ? scalar
                 : 0d;
         }

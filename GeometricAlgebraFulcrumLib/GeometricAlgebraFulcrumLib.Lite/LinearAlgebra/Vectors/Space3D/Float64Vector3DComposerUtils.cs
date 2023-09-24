@@ -309,9 +309,39 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Vector3D XyToTuple3D(this IFloat64Vector2D tuple)
+        public static Float64Vector3D ToXyVector3D(this IFloat64Vector2D tuple)
         {
             return Float64Vector3D.Create(tuple.X, tuple.Y, Float64Scalar.Zero);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D ToYxVector3D(this IFloat64Vector2D tuple)
+        {
+            return Float64Vector3D.Create(tuple.Y, tuple.X, Float64Scalar.Zero);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D ToXzVector3D(this IFloat64Vector2D tuple)
+        {
+            return Float64Vector3D.Create(tuple.X, Float64Scalar.Zero, tuple.Y);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D ToZxVector3D(this IFloat64Vector2D tuple)
+        {
+            return Float64Vector3D.Create(tuple.Y, Float64Scalar.Zero, tuple.X);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D ToYzVector3D(this IFloat64Vector2D tuple)
+        {
+            return Float64Vector3D.Create(Float64Scalar.Zero, tuple.X, tuple.Y);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D ToZyVector3D(this IFloat64Vector2D tuple)
+        {
+            return Float64Vector3D.Create(Float64Scalar.Zero, tuple.Y, tuple.X);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

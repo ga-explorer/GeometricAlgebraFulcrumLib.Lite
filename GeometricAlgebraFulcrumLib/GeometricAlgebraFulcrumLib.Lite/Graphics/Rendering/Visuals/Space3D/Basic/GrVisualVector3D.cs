@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Diagnostics;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Styles;
@@ -46,7 +45,7 @@ public sealed class GrVisualVector3D :
             GrVisualAnimationSpecs.Static
         );
     }
-
+    
     public static GrVisualVector3D Create(string name, GrVisualCurveTubeStyle3D style, IFloat64Vector3D origin, IFloat64Vector3D direction, GrVisualAnimationSpecs animationSpecs)
     {
         return new GrVisualVector3D(
@@ -58,39 +57,39 @@ public sealed class GrVisualVector3D :
         );
     }
 
-    public static GrVisualVector3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D direction, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualVector3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D direction)
     {
         return new GrVisualVector3D(
             name,
             style,
             Float64Vector3D.Zero,
             Float64Vector3D.E1,
-            animationSpecs
+            direction.AnimationSpecs
         ).SetAnimatedDirection(direction);
     }
 
-    public static GrVisualVector3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, IFloat64Vector3D origin, GrVisualAnimatedVector3D direction, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualVector3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, IFloat64Vector3D origin, GrVisualAnimatedVector3D direction)
     {
         return new GrVisualVector3D(
             name,
             style,
             origin,
             Float64Vector3D.E1,
-            animationSpecs
+            direction.AnimationSpecs
         ).SetAnimatedDirection(direction);
     }
 
-    public static GrVisualVector3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D origin, GrVisualAnimatedVector3D direction, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualVector3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D origin, GrVisualAnimatedVector3D direction)
     {
         return new GrVisualVector3D(
             name,
             style,
             Float64Vector3D.Zero,
             Float64Vector3D.E1,
-            animationSpecs
+            origin.AnimationSpecs
         ).SetAnimatedOriginDirection(origin, direction);
     }
-
+    
 
     public GrVisualCurveTubeStyle3D Style { get; }
 
@@ -100,6 +99,10 @@ public sealed class GrVisualVector3D :
 
     public IFloat64Vector3D Position
         => Origin.Add(Direction);
+
+    //public bool FixLength { get; }
+
+    //public double FixedLength { get; }
 
     public GrVisualAnimatedVector3D? AnimatedOrigin { get; set; }
 
@@ -148,15 +151,13 @@ public sealed class GrVisualVector3D :
 
         Debug.Assert(IsValid());
     }
-
+    
 
     public override bool IsValid()
     {
         return Origin.IsValid() &&
                Direction.IsValid() &&
-               GetAnimatedGeometries().All(g =>
-                   g.IsValid(AnimationSpecs.TimeRange)
-               );
+               GetAnimatedGeometries().All(g => g.IsValid());
     }
 
     public Float64Vector3D GetVisualLineSegmentPosition2()
@@ -205,11 +206,17 @@ public sealed class GrVisualVector3D :
             AnimationSpecs
         );
 
-        var animatedPosition2 = ComputedParametricCurve3D.Create(GetVisualLineSegmentPosition2).CreateAnimatedVector(AnimationSpecs.TimeRange);
-
         lineSegment.Visibility = Visibility;
+
+        if (AnimationSpecs.IsStatic) return lineSegment;
+        
+        lineSegment.AnimatedVisibility = AnimatedVisibility;
         lineSegment.AnimatedPosition1 = AnimatedOrigin;
-        lineSegment.AnimatedPosition2 = animatedPosition2;
+        lineSegment.AnimatedPosition2 = AnimationSpecs.CreateAnimatedVector3D(GetVisualLineSegmentPosition2);
+        
+        //lineSegment.AddInvalidFrameIndices(
+        //    GetInvalidFrameIndices()
+        //);
 
         return lineSegment;
     }
@@ -224,9 +231,17 @@ public sealed class GrVisualVector3D :
             AnimationSpecs
         );
 
+        arrowHead.Visibility = Visibility;
+
+        if (AnimationSpecs.IsStatic) return arrowHead;
+        
         arrowHead.AnimatedVisibility = AnimatedVisibility;
         arrowHead.AnimatedPosition = AnimatedPosition;
         arrowHead.AnimatedDirection = AnimatedDirection;
+        
+        //arrowHead.AddInvalidFrameIndices(
+        //    GetInvalidFrameIndices()
+        //);
 
         return arrowHead;
     }
@@ -241,7 +256,7 @@ public sealed class GrVisualVector3D :
         return Direction.ToUnitVector();
     }
 
-    public GrVisualVector3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+    public GrVisualVector3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
     {
         AnimatedVisibility = visibility;
 
@@ -319,7 +334,7 @@ public sealed class GrVisualVector3D :
     {
         Debug.Assert(IsValid());
 
-        foreach (var frameIndex in KeyFrameRange)
+        foreach (var frameIndex in GetValidFrameIndexSet())
         {
             var time = (double)frameIndex / AnimationSpecs.FrameRate;
 

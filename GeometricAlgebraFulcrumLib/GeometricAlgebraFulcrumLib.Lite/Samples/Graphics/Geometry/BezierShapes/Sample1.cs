@@ -1,8 +1,7 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric;
+﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Adaptive;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Bezier;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes.Surfaces;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Primitives;
@@ -10,6 +9,7 @@ using GeometricAlgebraFulcrumLib.Lite.Graphics.Primitives.Lines;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Xeogl;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Samples.Graphics.Geometry.BezierShapes
 {
@@ -81,7 +81,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Samples.Graphics.Geometry.BezierShapes
 
         public static void Execute()
         {
-            var parameterValueRange = Float64Range1D.Create(0, 1);
+            var parameterValueRange = Float64ScalarRange.Create(0, 1);
 
             var options = new AdaptiveCurveSamplingOptions3D(
                 3.DegreesToAngle(),

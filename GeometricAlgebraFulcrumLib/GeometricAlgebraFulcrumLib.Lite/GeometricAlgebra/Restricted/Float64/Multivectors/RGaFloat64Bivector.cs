@@ -7,6 +7,7 @@ using DataStructuresLib.Extensions;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multivectors.Composers;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Processors;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multivectors
 {
@@ -105,6 +106,24 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         {
             return Processor.CreateZeroVector();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<double, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, double, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Bivector GetBivectorPart()
@@ -168,6 +187,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
                 ).ToDictionary();
 
             return Processor.CreateBivector(idScalarDictionary);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public RGaFloat64Bivector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
         }
 
 

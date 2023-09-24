@@ -41,13 +41,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
         {
             return BoundingBox3D.CreateFromPoints(pointsList);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BoundingBox3D GetBoundingBox(this IEnumerable<IFloat64Vector3D> pointsList, double scalingFactor)
         {
             return BoundingBox3D.CreateFromPoints(pointsList, scalingFactor);
         }
-        
+
 
 
         public static Float64Vector2D GetCorner(this IBoundingBox2D boundingBox, bool maxCorner)
@@ -77,14 +77,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             return boundingBox.MaxY - boundingBox.MinY;
         }
 
-        public static Float64Range1D GetRangeX(this IBoundingBox2D boundingBox)
+        public static Float64ScalarRange GetRangeX(this IBoundingBox2D boundingBox)
         {
-            return Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX);
+            return Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX);
         }
 
-        public static Float64Range1D GetRangeY(this IBoundingBox2D boundingBox)
+        public static Float64ScalarRange GetRangeY(this IBoundingBox2D boundingBox)
         {
-            return Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+            return Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
         }
 
         public static int GetLongestSideIndex(this IBoundingBox2D boundingBox)
@@ -123,11 +123,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             );
         }
 
-        public static Float64Range1D GetLongestSideRange(this IBoundingBox2D boundingBox)
+        public static Float64ScalarRange GetLongestSideRange(this IBoundingBox2D boundingBox)
         {
             return boundingBox.MaxX - boundingBox.MinX >= boundingBox.MaxY - boundingBox.MinY
-                ? Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX)
-                : Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+                ? Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX)
+                : Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
         }
 
         public static double GetShortestSideMinValue(this IBoundingBox2D boundingBox)
@@ -159,11 +159,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             );
         }
 
-        public static Float64Range1D GetShortestSideRange(this IBoundingBox2D boundingBox)
+        public static Float64ScalarRange GetShortestSideRange(this IBoundingBox2D boundingBox)
         {
             return boundingBox.MaxX - boundingBox.MinX <= boundingBox.MaxY - boundingBox.MinY
-                ? Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX)
-                : Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+                ? Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX)
+                : Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
         }
 
         public static Float64Vector2D GetMinCorner(this IBoundingBox2D boundingBox)
@@ -296,14 +296,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             return boundingBox.MaxY - boundingBox.MinY;
         }
 
-        public static Float64Range1D GetSideRange(this IBoundingBox2D boundingBox, int axisIndex)
+        public static Float64ScalarRange GetSideRange(this IBoundingBox2D boundingBox, int axisIndex)
         {
             axisIndex = axisIndex.Mod(2);
 
             if (axisIndex == 0)
-                return Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX);
+                return Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX);
 
-            return Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+            return Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
         }
 
         public static Float64Vector2D GetSideDirection(this MutableBoundingBox2D boundingBox, int cornerIndex1, int cornerIndex2)
@@ -414,24 +414,24 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             var xLength = boundingBox.GetLengthX() / xDivisions;
             var yLength = boundingBox.GetLengthY() / yDivisions;
 
-            var minXValues = 
+            var minXValues =
                 Enumerable
                     .Range(0, xDivisions)
                     .Select(i => i * xLength + boundingBox.MinX)
                     .ToArray();
 
-            var maxXValues = 
+            var maxXValues =
                 minXValues
                     .Select(v => v + xLength)
                     .ToArray();
 
-            var minYValues = 
+            var minYValues =
                 Enumerable
                     .Range(0, yDivisions)
                     .Select(i => i * yLength + boundingBox.MinY)
                     .ToArray();
 
-            var maxYValues = 
+            var maxYValues =
                 minYValues
                     .Select(v => v + yLength)
                     .ToArray();
@@ -439,14 +439,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             var divisions = new BoundingBox2D[xDivisions, yDivisions];
 
             for (var ix = 0; ix < xDivisions; ix++)
-            for (var iy = 0; iy < yDivisions; iy++)
-                divisions[ix, iy] =
-                    BoundingBox2D.Create(
-                        minXValues[ix],
-                        minYValues[iy],
-                        maxXValues[ix],
-                        maxYValues[iy]
-                    );
+                for (var iy = 0; iy < yDivisions; iy++)
+                    divisions[ix, iy] =
+                        BoundingBox2D.Create(
+                            minXValues[ix],
+                            minYValues[iy],
+                            maxXValues[ix],
+                            maxYValues[iy]
+                        );
 
             return divisions;
 
@@ -604,19 +604,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             return boundingBox.MaxZ - boundingBox.MinZ;
         }
 
-        public static Float64Range1D GetRangeX(this IBoundingBox3D boundingBox)
+        public static Float64ScalarRange GetRangeX(this IBoundingBox3D boundingBox)
         {
-            return Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX);
+            return Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX);
         }
 
-        public static Float64Range1D GetRangeY(this IBoundingBox3D boundingBox)
+        public static Float64ScalarRange GetRangeY(this IBoundingBox3D boundingBox)
         {
-            return Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+            return Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
         }
 
-        public static Float64Range1D GetRangeZ(this IBoundingBox3D boundingBox)
+        public static Float64ScalarRange GetRangeZ(this IBoundingBox3D boundingBox)
         {
-            return Float64Range1D.Create(boundingBox.MinZ, boundingBox.MaxZ);
+            return Float64ScalarRange.Create(boundingBox.MinZ, boundingBox.MaxZ);
         }
 
         public static BoundingBox2D GetRangeXy(this IBoundingBox3D boundingBox)
@@ -761,7 +761,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
                 : lengthY >= lengthZ ? lengthY : lengthZ;
         }
 
-        public static Float64Range1D GetLongestSideRange(this IBoundingBox3D boundingBox)
+        public static Float64ScalarRange GetLongestSideRange(this IBoundingBox3D boundingBox)
         {
             var lengthX = boundingBox.MaxX - boundingBox.MinX;
             var lengthY = boundingBox.MaxY - boundingBox.MinY;
@@ -772,12 +772,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
                 : lengthY >= lengthZ ? 1 : 2;
 
             if (axisIndex == 0)
-                return Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX);
+                return Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX);
 
             if (axisIndex == 1)
-                return Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+                return Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
 
-            return Float64Range1D.Create(boundingBox.MinZ, boundingBox.MaxZ);
+            return Float64ScalarRange.Create(boundingBox.MinZ, boundingBox.MaxZ);
         }
 
         public static int GetShortestSideIndex(this IBoundingBox3D boundingBox)
@@ -835,7 +835,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
                 : lengthY <= lengthZ ? lengthY : lengthZ;
         }
 
-        public static Float64Range1D GetShortestSideRange(this IBoundingBox3D boundingBox)
+        public static Float64ScalarRange GetShortestSideRange(this IBoundingBox3D boundingBox)
         {
             var lengthX = boundingBox.MaxX - boundingBox.MinX;
             var lengthY = boundingBox.MaxY - boundingBox.MinY;
@@ -846,12 +846,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
                 : lengthY <= lengthZ ? 1 : 2;
 
             if (axisIndex == 0)
-                return Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX);
+                return Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX);
 
             if (axisIndex == 1)
-                return Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+                return Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
 
-            return Float64Range1D.Create(boundingBox.MinZ, boundingBox.MaxZ);
+            return Float64ScalarRange.Create(boundingBox.MinZ, boundingBox.MaxZ);
         }
 
         public static Float64Vector3D GetMinCorner(this IBoundingBox3D boundingBox)
@@ -1028,17 +1028,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             return boundingBox.MaxZ - boundingBox.MinZ;
         }
 
-        public static Float64Range1D GetSideRange(this IBoundingBox3D boundingBox, int axisIndex)
+        public static Float64ScalarRange GetSideRange(this IBoundingBox3D boundingBox, int axisIndex)
         {
             axisIndex = axisIndex.Mod(3);
 
             if (axisIndex == 0)
-                return Float64Range1D.Create(boundingBox.MinX, boundingBox.MaxX);
+                return Float64ScalarRange.Create(boundingBox.MinX, boundingBox.MaxX);
 
             if (axisIndex == 1)
-                return Float64Range1D.Create(boundingBox.MinY, boundingBox.MaxY);
+                return Float64ScalarRange.Create(boundingBox.MinY, boundingBox.MaxY);
 
-            return Float64Range1D.Create(boundingBox.MinZ, boundingBox.MaxZ);
+            return Float64ScalarRange.Create(boundingBox.MinZ, boundingBox.MaxZ);
         }
 
         public static Float64Vector3D GetSideDirection(this IBoundingBox3D boundingBox, int cornerIndex1, int cornerIndex2)
@@ -1175,7 +1175,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             var yLength = boundingBox.GetLengthY() / yDivisions;
             var zLength = boundingBox.GetLengthZ() / zDivisions;
 
-            var minXValues = 
+            var minXValues =
                 Enumerable
                     .Range(0, xDivisions)
                     .Select(i => i * xLength + boundingBox.MinX)
@@ -1183,7 +1183,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
 
             var maxXValues = minXValues.Select(v => v + xLength).ToArray();
 
-            var minYValues = 
+            var minYValues =
                 Enumerable
                     .Range(0, yDivisions)
                     .Select(i => i * yLength + boundingBox.MinY)
@@ -1191,7 +1191,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
 
             var maxYValues = minYValues.Select(v => v + yLength).ToArray();
 
-            var minZValues = 
+            var minZValues =
                 Enumerable
                     .Range(0, zDivisions)
                     .Select(i => i * zLength + boundingBox.MinZ)
@@ -1202,17 +1202,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
             var divisions = new BoundingBox3D[xDivisions, yDivisions, zDivisions];
 
             for (var ix = 0; ix < xDivisions; ix++)
-            for (var iy = 0; iy < yDivisions; iy++)
-            for (var iz = 0; iz < zDivisions; iz++)
-                divisions[ix, iy, iz] =
-                    BoundingBox3D.CreateFromPoints(
-                        minXValues[ix],
-                        minYValues[iy],
-                        minZValues[iz],
-                        maxXValues[ix],
-                        maxYValues[iy],
-                        maxZValues[iz]
-                    );
+                for (var iy = 0; iy < yDivisions; iy++)
+                    for (var iz = 0; iz < zDivisions; iz++)
+                        divisions[ix, iy, iz] =
+                            BoundingBox3D.CreateFromPoints(
+                                minXValues[ix],
+                                minYValues[iy],
+                                minZValues[iz],
+                                maxXValues[ix],
+                                maxYValues[iy],
+                                maxZValues[iz]
+                            );
 
             return divisions;
         }
@@ -1437,7 +1437,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Borders
                 (1.0d - tVector.Z) * boundingBox.MinZ + tVector.Z * boundingBox.MaxZ);
         }
 
-        public static IEnumerable<double> GetComponents(this Float64Range1D boundingBox)
+        public static IEnumerable<double> GetComponents(this Float64ScalarRange boundingBox)
         {
             yield return boundingBox.MinValue;
             yield return boundingBox.MaxValue;

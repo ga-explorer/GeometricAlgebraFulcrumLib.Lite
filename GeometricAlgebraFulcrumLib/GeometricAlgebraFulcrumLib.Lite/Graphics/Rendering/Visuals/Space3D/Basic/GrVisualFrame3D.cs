@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Diagnostics;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Styles;
@@ -66,7 +65,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
             );
         }
 
-        public static GrVisualFrame3D CreateAnimated(string name, GrVisualFrameStyle3D style, GrVisualAnimatedVector3D origin, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimatedVector3D direction3, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualFrame3D CreateAnimated(string name, GrVisualFrameStyle3D style, GrVisualAnimatedVector3D origin, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimatedVector3D direction3)
         {
             return new GrVisualFrame3D(
                 name,
@@ -75,7 +74,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 Float64Vector3D.E1,
                 Float64Vector3D.E2,
                 Float64Vector3D.E3,
-                animationSpecs
+                origin.AnimationSpecs
             ).SetAnimatedOrigin(origin)
                 .SetAnimatedDirection1(direction1)
                 .SetAnimatedDirection2(direction2)
@@ -200,9 +199,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                    Direction1.IsValid() &&
                    Direction2.IsValid() &&
                    Direction3.IsValid() &&
-                   GetAnimatedGeometries().All(g =>
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
 
 
@@ -280,6 +277,10 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
             );
 
             point.Visibility = Visibility;
+            
+            if (AnimationSpecs.IsStatic) return point;
+
+            point.AnimatedVisibility = AnimatedVisibility;
             point.AnimatedPosition = AnimatedOrigin;
 
             return point;
@@ -294,12 +295,18 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 GetVisualLineSegment1EndPosition(),
                 AnimationSpecs
             );
-
-            var animatedPosition = ComputedParametricCurve3D.Create(GetVisualLineSegment1EndPosition).CreateAnimatedVector(AnimationSpecs.TimeRange);
-
+            
             lineSegment.Visibility = Visibility;
+
+            if (AnimationSpecs.IsStatic) return lineSegment;
+
+            lineSegment.AnimatedVisibility = AnimatedVisibility;
             lineSegment.AnimatedPosition1 = AnimatedOrigin;
-            lineSegment.AnimatedPosition2 = animatedPosition;
+            lineSegment.AnimatedPosition2 = AnimationSpecs.CreateAnimatedVector3D(GetVisualLineSegment1EndPosition);
+            
+            //lineSegment.AddInvalidFrameIndices(
+            //    GetInvalidFrameIndices()
+            //);
 
             return lineSegment;
         }
@@ -313,12 +320,18 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 GetVisualLineSegment2EndPosition(),
                 AnimationSpecs
             );
-
-            var animatedPosition = ComputedParametricCurve3D.Create(GetVisualLineSegment2EndPosition).CreateAnimatedVector(AnimationSpecs.TimeRange);
-
+            
             lineSegment.Visibility = Visibility;
+
+            if (AnimationSpecs.IsStatic) return lineSegment;
+
+            lineSegment.AnimatedVisibility = AnimatedVisibility;
             lineSegment.AnimatedPosition1 = AnimatedOrigin;
-            lineSegment.AnimatedPosition2 = animatedPosition;
+            lineSegment.AnimatedPosition2 = AnimationSpecs.CreateAnimatedVector3D(GetVisualLineSegment2EndPosition);
+            
+            //lineSegment.AddInvalidFrameIndices(
+            //    GetInvalidFrameIndices()
+            //);
 
             return lineSegment;
         }
@@ -333,11 +346,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 AnimationSpecs
             );
 
-            var animatedPosition = ComputedParametricCurve3D.Create(GetVisualLineSegment3EndPosition).CreateAnimatedVector(AnimationSpecs.TimeRange);
-
             lineSegment.Visibility = Visibility;
+
+            if (AnimationSpecs.IsStatic) return lineSegment;
+
+            lineSegment.AnimatedVisibility = AnimatedVisibility;
             lineSegment.AnimatedPosition1 = AnimatedOrigin;
-            lineSegment.AnimatedPosition2 = animatedPosition;
+            lineSegment.AnimatedPosition2 = AnimationSpecs.CreateAnimatedVector3D(GetVisualLineSegment3EndPosition);
+            
+            //lineSegment.AddInvalidFrameIndices(
+            //    GetInvalidFrameIndices()
+            //);
 
             return lineSegment;
         }
@@ -352,9 +371,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 AnimationSpecs
             );
 
+            arrowHead.Visibility = Visibility;
+
+            if (AnimationSpecs.IsStatic) return arrowHead;
+
             arrowHead.AnimatedVisibility = AnimatedVisibility;
             arrowHead.AnimatedPosition = AnimatedPosition1;
             arrowHead.AnimatedDirection = AnimatedDirection1;
+            
+            //arrowHead.AddInvalidFrameIndices(
+            //    GetInvalidFrameIndices()
+            //);
 
             return arrowHead;
         }
@@ -369,9 +396,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 AnimationSpecs
             );
 
+            arrowHead.Visibility = Visibility;
+
+            if (AnimationSpecs.IsStatic) return arrowHead;
+
             arrowHead.AnimatedVisibility = AnimatedVisibility;
             arrowHead.AnimatedPosition = AnimatedPosition2;
             arrowHead.AnimatedDirection = AnimatedDirection2;
+            
+            //arrowHead.AddInvalidFrameIndices(
+            //    GetInvalidFrameIndices()
+            //);
 
             return arrowHead;
         }
@@ -386,9 +421,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                 AnimationSpecs
             );
 
+            arrowHead.Visibility = Visibility;
+
+            if (AnimationSpecs.IsStatic) return arrowHead;
+
             arrowHead.AnimatedVisibility = AnimatedVisibility;
             arrowHead.AnimatedPosition = AnimatedPosition3;
             arrowHead.AnimatedDirection = AnimatedDirection3;
+            
+            //arrowHead.AddInvalidFrameIndices(
+            //    GetInvalidFrameIndices()
+            //);
 
             return arrowHead;
         }
@@ -425,7 +468,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
         }
 
 
-        public GrVisualFrame3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualFrame3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
 
@@ -560,7 +603,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
 

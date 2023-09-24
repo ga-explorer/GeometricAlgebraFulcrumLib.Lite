@@ -55,7 +55,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Sp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RGaFloat64Vector GetCenter()
         {
-            return Vector.GetVectorPart(index => index < Space.VSpaceDimensions - 2);
+            return Vector.GetVectorPart((int index) => index < Space.VSpaceDimensions - 2);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

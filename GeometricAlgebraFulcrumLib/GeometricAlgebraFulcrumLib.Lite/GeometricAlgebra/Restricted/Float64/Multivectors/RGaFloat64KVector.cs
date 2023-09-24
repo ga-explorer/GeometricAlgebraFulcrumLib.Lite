@@ -41,6 +41,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         {
             return IsZero || Grade == 2;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool IsTrivector()
+        {
+            return IsZero || Grade == 3;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool IsKVector(int grade)

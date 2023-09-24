@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space4D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space4D.Curves;
 
@@ -31,8 +31,8 @@ public class ConstantParametricCurve4D :
     
     public Float64Vector4D Tangent { get; }
 
-    public Float64Range1D ParameterRange 
-        => Float64Range1D.Infinite;
+    public Float64ScalarRange ParameterRange 
+        => Float64ScalarRange.Infinite;
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

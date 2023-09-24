@@ -123,7 +123,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Fr
                             hyperSubspace.Project(
                                 metric.CreateTermVector(index, scalingFactor)
                             )
-                        ).GetVectorPart(i => i < vSpaceDimensions)
+                        ).GetVectorPart((int i) => i < vSpaceDimensions)
                     );
 
             return RGaFloat64VectorFrame.Create(

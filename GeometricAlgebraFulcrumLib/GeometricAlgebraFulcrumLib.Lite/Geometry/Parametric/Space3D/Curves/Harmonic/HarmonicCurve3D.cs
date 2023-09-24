@@ -1,7 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Adaptive;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
@@ -12,14 +10,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Har
         IParametricC2Curve3D,
         IArcLengthCurve3D
     {
-        private AdaptiveCurve3D _adaptiveCurve;
+        private AdaptiveCurve3D? _adaptiveCurve;
         private double _adaptiveCurveLength;
         private readonly Dictionary<int, HarmonicCurveTerm3D> _harmonicTerms
             = new Dictionary<int, HarmonicCurveTerm3D>();
 
 
-        public Float64Range1D ParameterRange
-            => Float64Range1D.ZeroToOne;
+        public Float64ScalarRange ParameterRange
+            => Float64ScalarRange.ZeroToOne;
         
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -63,9 +61,28 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Har
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public HarmonicCurve3D SetHarmonic(int harmonicFactor, double magnitudeX, double magnitudeY, double magnitudeZ)
         {
-            var term = new HarmonicCurveTerm3D(
+            return SetHarmonic(
                 harmonicFactor,
                 Float64Vector3D.Create(magnitudeX, magnitudeY, magnitudeZ)
+            );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public HarmonicCurve3D SetHarmonic(int harmonicFactor, Float64Vector3D magnitudeVector)
+        {
+            return SetHarmonic(
+                harmonicFactor,
+                magnitudeVector,
+                Float64Vector3D.Create(0, 1/3d, -1/3d)
+            );
+        }
+
+        public HarmonicCurve3D SetHarmonic(int harmonicFactor, Float64Vector3D magnitudeVector, Float64Vector3D parameterShiftVector)
+        {
+            var term = new HarmonicCurveTerm3D(
+                harmonicFactor,
+                magnitudeVector,
+                parameterShiftVector
             );
 
             _adaptiveCurve = null;
@@ -94,7 +111,10 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Har
             return _harmonicTerms
                 .Values
                 .Select(t => t.GetPoint(parameterValue))
-                .Aggregate(Float64Vector3D.Zero, (a, b) => a + b);
+                .Aggregate(
+                    Float64Vector3D.Zero, 
+                    (a, b) => a + b
+                );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -111,7 +131,10 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Har
             return _harmonicTerms
                 .Values
                 .Select(t => t.GetTangent(parameterValue))
-                .Aggregate(Float64Vector3D.Zero, (a, b) => a + b);
+                .Aggregate(
+                    Float64Vector3D.Zero, 
+                    (a, b) => a + b
+                );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -134,11 +157,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Har
             return _harmonicTerms
                 .Values
                 .Select(t => t.GetSecondDerivative(parameterValue))
-                .Aggregate(Float64Vector3D.Zero, (a, b) => a + b);
+                .Aggregate(
+                    Float64Vector3D.Zero, 
+                    (a, b) => a + b
+                );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double GetLength()
+        public Float64Scalar GetLength()
         {
             if (_adaptiveCurve == null)
                 UpdateSampling();
@@ -147,23 +173,23 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Har
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ParameterToLength(double parameterValue)
+        public Float64Scalar ParameterToLength(double parameterValue)
         {
             if (_adaptiveCurve == null)
                 UpdateSampling();
 
-            return _adaptiveCurve.ParameterToLength(parameterValue);
+            return _adaptiveCurve?.ParameterToLength(parameterValue) ?? 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double LengthToParameter(double length)
+        public Float64Scalar LengthToParameter(double length)
         {
             if (_adaptiveCurve == null)
                 UpdateSampling();
 
             length = length.ClampPeriodic(_adaptiveCurveLength);
 
-            return _adaptiveCurve.LengthToParameter(length);
+            return _adaptiveCurve?.LengthToParameter(length) ?? 0;
         }
     }
 }

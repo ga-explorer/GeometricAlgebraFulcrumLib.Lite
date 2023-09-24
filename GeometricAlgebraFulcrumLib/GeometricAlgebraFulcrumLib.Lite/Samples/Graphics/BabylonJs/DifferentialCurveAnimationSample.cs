@@ -2,8 +2,11 @@
 using DataStructuresLib.Files;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Functions.Phasors;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space1D.Scalars;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space1D.Scalars.Harmonic;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Adaptive;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Spherical;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Basic;
@@ -13,6 +16,7 @@ using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Surface
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Basis;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using WebComposerLib.Html.Media;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Samples.Graphics.BabylonJs;
@@ -350,6 +354,95 @@ public static class DifferentialCurveAnimationSample
         return curve;
     }
 
+    public static IParametricC2Curve3D GetCurve3()
+    {
+        const double freqHz = 0.05d;
+        //const double freq = 2 * Math.PI * freqHz;
+
+        MaxTime = 1d / freqHz;
+
+        var parameterRange = Float64ScalarRange.Create(0, MaxTime);
+
+        var rCurve = CosWaveParametricScalar.Create(parameterRange, 3, 5, 2);
+        var thetaCurve = ConstantParametricScalar.Create(0);
+        var phiCurve = ConstantParametricScalar.Create(0);
+
+        var curve = SphericalCurve3D.Create(
+            parameterRange, 
+            rCurve,
+            thetaCurve,
+            phiCurve
+        );
+
+        return curve;
+    }
+    
+    public static IParametricC2Curve3D GetCurve4()
+    {
+        const double freqHz = 0.05d;
+        const double freq = 2 * Math.PI * freqHz;
+
+        MaxTime = 1d / freqHz;
+        
+        var rCurve = ConstantParametricScalar.Create(5);
+        var thetaCurve = LinearParametricScalar.Create(1 * freq);
+        var phiCurve = LinearParametricScalar.Create(Math.PI, 2 * freq);
+
+        var curve = SphericalCurve3D.Create(
+            Float64ScalarRange.Create(0, MaxTime), 
+            rCurve,
+            thetaCurve,
+            phiCurve
+        );
+
+        return curve;
+    }
+
+    public static IParametricC2Curve3D GetCurve5()
+    {
+        const double freqHz = 0.05d;
+        const double freq = 2 * Math.PI * freqHz;
+
+        MaxTime = 1d / freqHz;
+        
+        var parameterRange = Float64ScalarRange.Create(0, MaxTime);
+
+        var rCurve = CosWaveParametricScalar.Create(parameterRange, 3, 5, 3);
+        var thetaCurve = LinearParametricScalar.Create(2 * freq);
+        var phiCurve = LinearParametricScalar.Create(1 * freq);
+
+        var curve = SphericalCurve3D.Create(
+            parameterRange, 
+            rCurve,
+            thetaCurve,
+            phiCurve
+        );
+
+        return curve;
+    }
+    
+    public static IParametricC2Curve3D GetCurve6()
+    {
+        const double freqHz = 0.05d;
+        const double freq = 2 * Math.PI * freqHz;
+
+        MaxTime = 1d / freqHz;
+
+        var rCurve = ConstantParametricScalar.Create(4);
+        var thetaCurve = LinearParametricScalar.Create(2 * freq);
+        var phiCurve = ConstantParametricScalar.Create(0);
+
+        var curve = SphericalCurve3D.Create(
+            Float64ScalarRange.Create(0, MaxTime), 
+            rCurve,
+            thetaCurve,
+            phiCurve
+        );
+
+        return curve;
+    }
+
+
     public static void Example1()
     {
         var vCurve = GetCurve2();
@@ -382,7 +475,7 @@ public static class DifferentialCurveAnimationSample
         InitializeImageCache();
 
         MainSceneComposer
-            .AddDefaultGrid(GridUnitCount)
+            .AddDefaultGridZx(GridUnitCount)
             .AddDefaultAxes(AxesOrigin)
             .AddDefaultEnvironment(GridUnitCount)
             .AddDefaultPerspectiveCamera(
@@ -415,7 +508,7 @@ public static class DifferentialCurveAnimationSample
             vCurve
                 .GetComponentCurves()
                 .MapItems(curve =>
-                    curve.CreateAnimatedVector(AnimationSpecs.TimeRange)
+                    AnimationSpecs.CreateAnimatedVector3D(curve)
                 );
 
         var v12AnimatedVector = 
@@ -428,24 +521,23 @@ public static class DifferentialCurveAnimationSample
             v3AnimatedVector + v1AnimatedVector;
 
         var vAnimatedVector = 
-            vCurve.CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(vCurve);
         
         var u1AnimatedVector = 
-            curveDerivative1.CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(curveDerivative1);
         
         var u2AnimatedVector = 
-            curveDerivative2.CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(curveDerivative2);
 
         var u3AnimatedVector = 
-            curveDerivative3.CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(curveDerivative3);
         
 
         MainSceneComposer.AddVector(
             GrVisualVector3D.CreateAnimated(
                 "vVector",
                 orangeMaterial.CreateTubeCurveStyle(0.05),
-                vAnimatedVector,
-                AnimationSpecs
+                vAnimatedVector
             )
         );
         
@@ -453,8 +545,7 @@ public static class DifferentialCurveAnimationSample
             "vVectorText",
             ImageCache,
             vAnimatedVector.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
 
 
@@ -462,8 +553,7 @@ public static class DifferentialCurveAnimationSample
             GrVisualVector3D.CreateAnimated(
                 "v1Vector",
                 redMaterial.CreateTubeCurveStyle(0.05),
-                v1AnimatedVector,
-                AnimationSpecs
+                v1AnimatedVector
             )
         );
         
@@ -471,8 +561,7 @@ public static class DifferentialCurveAnimationSample
             "v1VectorText",
             ImageCache,
             v1AnimatedVector.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
 
 
@@ -480,8 +569,7 @@ public static class DifferentialCurveAnimationSample
             GrVisualVector3D.CreateAnimated(
                 "v2Vector",
                 greenMaterial.CreateTubeCurveStyle(0.05),
-                v2AnimatedVector,
-                AnimationSpecs
+                v2AnimatedVector
             )
         );
         
@@ -489,8 +577,7 @@ public static class DifferentialCurveAnimationSample
             "v2VectorText",
             ImageCache,
             v2AnimatedVector.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
 
 
@@ -498,8 +585,7 @@ public static class DifferentialCurveAnimationSample
             GrVisualVector3D.CreateAnimated(
                 "v3Vector",
                 blueMaterial.CreateTubeCurveStyle(0.05),
-                v3AnimatedVector,
-                AnimationSpecs
+                v3AnimatedVector
             )
         );
         
@@ -507,8 +593,7 @@ public static class DifferentialCurveAnimationSample
             "v3VectorText",
             ImageCache,
             v3AnimatedVector.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
 
 
@@ -520,8 +605,7 @@ public static class DifferentialCurveAnimationSample
                 "line12v1",
                 dashedLinesStyle,
                 v12AnimatedVector,
-                v1AnimatedVector,
-                AnimationSpecs
+                v1AnimatedVector
             )
         );
         
@@ -530,8 +614,7 @@ public static class DifferentialCurveAnimationSample
                 "line12v2",
                 dashedLinesStyle,
                 v12AnimatedVector,
-                v2AnimatedVector,
-                AnimationSpecs
+                v2AnimatedVector
             )
         );
         
@@ -540,8 +623,7 @@ public static class DifferentialCurveAnimationSample
                 "line23v2",
                 dashedLinesStyle,
                 v23AnimatedVector,
-                v2AnimatedVector,
-                AnimationSpecs
+                v2AnimatedVector
             )
         );
 
@@ -550,8 +632,7 @@ public static class DifferentialCurveAnimationSample
                 "line23v3",
                 dashedLinesStyle,
                 v23AnimatedVector,
-                v3AnimatedVector,
-                AnimationSpecs
+                v3AnimatedVector
             )
         );
         
@@ -560,8 +641,7 @@ public static class DifferentialCurveAnimationSample
                 "line31v3",
                 dashedLinesStyle,
                 v31AnimatedVector,
-                v3AnimatedVector,
-                AnimationSpecs
+                v3AnimatedVector
             )
         );
 
@@ -570,8 +650,7 @@ public static class DifferentialCurveAnimationSample
                 "line31v1",
                 dashedLinesStyle,
                 v31AnimatedVector,
-                v1AnimatedVector,
-                AnimationSpecs
+                v1AnimatedVector
             )
         );
         
@@ -580,8 +659,7 @@ public static class DifferentialCurveAnimationSample
                 "line12v",
                 dashedLinesStyle,
                 v12AnimatedVector,
-                vAnimatedVector,
-                AnimationSpecs
+                vAnimatedVector
             )
         );
         
@@ -590,8 +668,7 @@ public static class DifferentialCurveAnimationSample
                 "line23v",
                 dashedLinesStyle,
                 v23AnimatedVector,
-                vAnimatedVector,
-                AnimationSpecs
+                vAnimatedVector
             )
         );
 
@@ -600,8 +677,7 @@ public static class DifferentialCurveAnimationSample
                 "line31v",
                 dashedLinesStyle,
                 v31AnimatedVector,
-                vAnimatedVector,
-                AnimationSpecs
+                vAnimatedVector
             )
         );
 
@@ -611,7 +687,7 @@ public static class DifferentialCurveAnimationSample
                 "curvePath",
                 orangeMaterial.CreateTubeCurveStyle(0.03),
                 vCurve.CreateAdaptiveCurve3D(
-                    AnimationSpecs.TimeRange,
+                    AnimationSpecs.FrameTimeRange,
                     new AdaptiveCurveSamplingOptions3D(
                         5d.DegreesToAngle(), 
                         1, 
@@ -634,8 +710,7 @@ public static class DifferentialCurveAnimationSample
             vAnimatedVector,
             u1AnimatedVector,
             u2AnimatedVector,
-            u3AnimatedVector,
-            AnimationSpecs
+            u3AnimatedVector
         );
 
         MainSceneComposer.AddFrame(curveFrame);
@@ -645,8 +720,7 @@ public static class DifferentialCurveAnimationSample
             ImageCache,
             curveFrame.AnimatedOrigin + 
             curveFrame.AnimatedDirection1.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
         
         MainSceneComposer.AddLaTeXText(
@@ -654,8 +728,7 @@ public static class DifferentialCurveAnimationSample
             ImageCache,
             curveFrame.AnimatedOrigin + 
             curveFrame.AnimatedDirection2.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
 
         MainSceneComposer.AddLaTeXText(
@@ -663,8 +736,7 @@ public static class DifferentialCurveAnimationSample
             ImageCache,
             curveFrame.AnimatedOrigin + 
             curveFrame.AnimatedDirection3.AddLength(0.25),
-            HtmlComposer.LaTeXScalingFactor,
-            AnimationSpecs
+            HtmlComposer.LaTeXScalingFactor
         );
         
         var curveFrameBoundsMaterial = 
@@ -688,19 +760,19 @@ public static class DifferentialCurveAnimationSample
             vCurve.GetFrenetFrameRotationQuaternionsCurve();
 
         var e1AnimatedVector =
-            ComputedParametricCurve3D.Create(
-                time => quaternionCurve.GetPoint(time).RotateVector(LinUnitBasisVector3D.PositiveX)
-            ).CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(ComputedParametricCurve3D.Create(
+                time => quaternionCurve.GetQuaternion(time).RotateVector(LinUnitBasisVector3D.PositiveX)
+            ));
         
         var e2AnimatedVector =
-            ComputedParametricCurve3D.Create(
-                time => quaternionCurve.GetPoint(time).RotateVector(LinUnitBasisVector3D.PositiveY)
-            ).CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(ComputedParametricCurve3D.Create(
+                time => quaternionCurve.GetQuaternion(time).RotateVector(LinUnitBasisVector3D.PositiveY)
+            ));
 
         var e3AnimatedVector =
-            ComputedParametricCurve3D.Create(
-                time => quaternionCurve.GetPoint(time).RotateVector(LinUnitBasisVector3D.PositiveZ)
-            ).CreateAnimatedVector(AnimationSpecs.TimeRange);
+            AnimationSpecs.CreateAnimatedVector3D(ComputedParametricCurve3D.Create(
+                time => quaternionCurve.GetQuaternion(time).RotateVector(LinUnitBasisVector3D.PositiveZ)
+            ));
 
         MainSceneComposer.AddParallelepipedSurface(
             GrVisualParallelepipedSurface3D.CreateAnimated(
@@ -709,8 +781,7 @@ public static class DifferentialCurveAnimationSample
                 vAnimatedVector,
                 e1AnimatedVector,
                 e2AnimatedVector,
-                e3AnimatedVector,
-                AnimationSpecs
+                e3AnimatedVector
             )
         );
 
@@ -724,5 +795,369 @@ public static class DifferentialCurveAnimationSample
 
         File.WriteAllText(htmlFilePath, htmlCode);
     }
+    
+    public static void Example2()
+    {
+        var vCurve = GetCurve5();
+        
+        AnimationSpecs = GrVisualAnimationSpecs.Create(FrameRate, MaxTime);
 
+        //var (v1Curve, v2Curve, v3Curve) = 
+        //    vCurve.GetComponentCurves();
+
+        var curveDerivative1 = ComputedParametricCurve3D.Create(time => 
+            vCurve
+                .GetArcLengthDerivative1Point(time)
+                .ToUnitVector(false)
+            );
+
+        //var curveDerivative2 = ComputedParametricCurve3D.Create(time => 
+        //    vCurve
+        //        .GetArcLengthDerivative2Point(time)
+        //        .ToUnitVector(false)
+        //    );
+        
+        //var curveDerivative3 = ComputedParametricCurve3D.Create(time => 
+        //    vCurve
+        //        .GetArcLengthDerivative3Point(time)
+        //        .ToUnitVector(false)
+        //    );
+
+        InitializeSceneComposers(0);
+        
+        InitializeImageCache();
+
+        MainSceneComposer
+            .AddDefaultGridZx(GridUnitCount)
+            .AddDefaultAxes(AxesOrigin)
+            .AddDefaultEnvironment(GridUnitCount)
+            .AddDefaultPerspectiveCamera(
+                CameraDistance,
+                "2 * Math.PI / 20",
+                "2 * Math.PI / 5"
+            );
+
+        var redMaterial =
+            Color.Red.ToBabylonJsSimpleMaterial("redMaterial");
+
+        var greenMaterial =
+            Color.Green.ToBabylonJsSimpleMaterial("greenMaterial");
+
+        var blueMaterial =
+            Color.Blue.ToBabylonJsSimpleMaterial("blueMaterial");
+
+        var orangeMaterial =
+            Color.DarkOrange.ToBabylonJsSimpleMaterial("orangeMaterial");
+
+        MainSceneComposer.AddMaterials(
+            redMaterial,
+            greenMaterial,
+            blueMaterial,
+            orangeMaterial
+        );
+        
+
+        var (v1AnimatedVector, v2AnimatedVector, v3AnimatedVector) = 
+            vCurve
+                .GetComponentCurves()
+                .MapItems(curve =>
+                    AnimationSpecs.CreateAnimatedVector3D(curve)
+                );
+
+        var v12AnimatedVector = 
+            v1AnimatedVector + v2AnimatedVector;
+        
+        var v23AnimatedVector = 
+            v2AnimatedVector + v3AnimatedVector;
+        
+        var v31AnimatedVector = 
+            v3AnimatedVector + v1AnimatedVector;
+
+        var vAnimatedVector = 
+            AnimationSpecs.CreateAnimatedVector3D(vCurve);
+        
+        var u1AnimatedVector = 
+            AnimationSpecs.CreateAnimatedVector3D(curveDerivative1);
+        
+        //var u2AnimatedVector = 
+        //    curveDerivative2.CreateAnimatedVector(AnimationSpecs);
+
+        //var u3AnimatedVector = 
+        //    curveDerivative3.CreateAnimatedVector(AnimationSpecs);
+        
+
+        MainSceneComposer.AddVector(
+            GrVisualVector3D.CreateAnimated(
+                "vVector",
+                orangeMaterial.CreateTubeCurveStyle(0.05),
+                vAnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLaTeXText(
+            "vVectorText",
+            ImageCache,
+            vAnimatedVector.AddLength(0.25),
+            HtmlComposer.LaTeXScalingFactor
+        );
+
+
+        MainSceneComposer.AddVector(
+            GrVisualVector3D.CreateAnimated(
+                "v1Vector",
+                redMaterial.CreateTubeCurveStyle(0.05),
+                v1AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLaTeXText(
+            "v1VectorText",
+            ImageCache,
+            v1AnimatedVector.AddLength(0.25),
+            HtmlComposer.LaTeXScalingFactor
+        );
+
+
+        MainSceneComposer.AddVector(
+            GrVisualVector3D.CreateAnimated(
+                "v2Vector",
+                greenMaterial.CreateTubeCurveStyle(0.05),
+                v2AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLaTeXText(
+            "v2VectorText",
+            ImageCache,
+            v2AnimatedVector.AddLength(0.25),
+            HtmlComposer.LaTeXScalingFactor
+        );
+
+
+        MainSceneComposer.AddVector(
+            GrVisualVector3D.CreateAnimated(
+                "v3Vector",
+                blueMaterial.CreateTubeCurveStyle(0.05),
+                v3AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLaTeXText(
+            "v3VectorText",
+            ImageCache,
+            v3AnimatedVector.AddLength(0.25),
+            HtmlComposer.LaTeXScalingFactor
+        );
+
+
+        var dashedLinesStyle = 
+            Color.DarkOrange.CreateDashedLineCurveStyle(3, 2, 16);
+
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line12v1",
+                dashedLinesStyle,
+                v12AnimatedVector,
+                v1AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line12v2",
+                dashedLinesStyle,
+                v12AnimatedVector,
+                v2AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line23v2",
+                dashedLinesStyle,
+                v23AnimatedVector,
+                v2AnimatedVector
+            )
+        );
+
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line23v3",
+                dashedLinesStyle,
+                v23AnimatedVector,
+                v3AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line31v3",
+                dashedLinesStyle,
+                v31AnimatedVector,
+                v3AnimatedVector
+            )
+        );
+
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line31v1",
+                dashedLinesStyle,
+                v31AnimatedVector,
+                v1AnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line12v",
+                dashedLinesStyle,
+                v12AnimatedVector,
+                vAnimatedVector
+            )
+        );
+        
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line23v",
+                dashedLinesStyle,
+                v23AnimatedVector,
+                vAnimatedVector
+            )
+        );
+
+        MainSceneComposer.AddLineSegment(
+            GrVisualLineSegment3D.CreateAnimated(
+                "line31v",
+                dashedLinesStyle,
+                v31AnimatedVector,
+                vAnimatedVector
+            )
+        );
+
+
+        MainSceneComposer.AddLinePath(
+            GrVisualPointPathCurve3D.CreateStatic(
+                "curvePath",
+                orangeMaterial.CreateTubeCurveStyle(0.03),
+                vCurve.CreateAdaptiveCurve3D(
+                    AnimationSpecs.FrameTimeRange,
+                    new AdaptiveCurveSamplingOptions3D(
+                        5d.DegreesToAngle(), 
+                        3, 
+                        10
+                    )
+                )
+            )
+        );
+
+        var curveFrame = GrVisualVector3D.CreateAnimated(
+            "curveFrame",
+            redMaterial.CreateTubeCurveStyle(0.05),
+            vAnimatedVector,
+            u1AnimatedVector
+        );
+
+        MainSceneComposer.AddVector(curveFrame);
+
+        //var curveFrame = GrVisualFrame3D.CreateAnimated(
+        //    "curveFrame",
+        //    new GrVisualFrameStyle3D
+        //    {
+        //        OriginStyle = orangeMaterial.CreateThickSurfaceStyle(0.065),
+        //        Direction1Style = redMaterial.CreateTubeCurveStyle(0.05),
+        //        Direction2Style = greenMaterial.CreateTubeCurveStyle(0.05),
+        //        Direction3Style = blueMaterial.CreateTubeCurveStyle(0.05)
+        //    },
+        //    vAnimatedVector,
+        //    u1AnimatedVector,
+        //    u2AnimatedVector,
+        //    u3AnimatedVector,
+        //    AnimationSpecs
+        //);
+
+        //MainSceneComposer.AddFrame(curveFrame);
+        
+        MainSceneComposer.AddLaTeXText(
+            "u1VectorText",
+            ImageCache,
+            curveFrame.AnimatedOrigin + 
+            curveFrame.AnimatedDirection.AddLength(0.25),
+            HtmlComposer.LaTeXScalingFactor
+        );
+        
+        //MainSceneComposer.AddLaTeXText(
+        //    "u2VectorText",
+        //    ImageCache,
+        //    curveFrame.AnimatedOrigin + 
+        //    curveFrame.AnimatedDirection2.AddLength(0.25),
+        //    HtmlComposer.LaTeXScalingFactor,
+        //    AnimationSpecs
+        //);
+
+        //MainSceneComposer.AddLaTeXText(
+        //    "u3VectorText",
+        //    ImageCache,
+        //    curveFrame.AnimatedOrigin + 
+        //    curveFrame.AnimatedDirection3.AddLength(0.25),
+        //    HtmlComposer.LaTeXScalingFactor,
+        //    AnimationSpecs
+        //);
+        
+        //var curveFrameBoundsMaterial = 
+        //    MainSceneComposer.AddOrGetColorMaterial(
+        //        Color.Orange.WithAlpha(0.25f)
+        //    );
+
+        //MainSceneComposer.AddParallelepipedSurface(
+        //    GrVisualParallelepipedSurface3D.CreateAnimated(
+        //        "curveBounds",
+        //        curveFrameBoundsMaterial.CreateThinSurfaceStyle(),
+        //        Float64Tuple3D.Zero, 
+        //        v1AnimatedVector,
+        //        v2AnimatedVector,
+        //        v3AnimatedVector,
+        //        animationSpecs
+        //    )
+        //);
+
+        //var quaternionCurve = 
+        //    vCurve.GetFrenetFrameRotationQuaternionsCurve();
+
+        //var e1AnimatedVector =
+        //    ComputedParametricCurve3D.Create(
+        //        time => quaternionCurve.GetPoint(time).RotateVector(LinUnitBasisVector3D.PositiveX)
+        //    ).CreateAnimatedVector(AnimationSpecs);
+        
+        //var e2AnimatedVector =
+        //    ComputedParametricCurve3D.Create(
+        //        time => quaternionCurve.GetPoint(time).RotateVector(LinUnitBasisVector3D.PositiveY)
+        //    ).CreateAnimatedVector(AnimationSpecs);
+
+        //var e3AnimatedVector =
+        //    ComputedParametricCurve3D.Create(
+        //        time => quaternionCurve.GetPoint(time).RotateVector(LinUnitBasisVector3D.PositiveZ)
+        //    ).CreateAnimatedVector(AnimationSpecs);
+
+        //MainSceneComposer.AddParallelepipedSurface(
+        //    GrVisualParallelepipedSurface3D.CreateAnimated(
+        //        "curveFrameBounds",
+        //        curveFrameBoundsMaterial.CreateThinSurfaceStyle(),
+        //        vAnimatedVector,
+        //        e1AnimatedVector,
+        //        e2AnimatedVector,
+        //        e3AnimatedVector,
+        //        AnimationSpecs
+        //    )
+        //);
+
+
+        var htmlCode = HtmlComposer.GetHtmlCode();
+
+        var htmlFilePath = WorkingFolder.GetFilePath(
+            @$"DifferentialCurveAnimationExample2",
+            "html"
+        );
+
+        File.WriteAllText(htmlFilePath, htmlCode);
+    }
 }

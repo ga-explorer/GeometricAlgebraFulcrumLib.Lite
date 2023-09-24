@@ -4,7 +4,6 @@ using GeometricAlgebraFulcrumLib.Lite.Graphics.Meshes.PointsPath.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Styles;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
-using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Curves
 {
@@ -68,14 +67,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
             );
         }
         
-        public static GrVisualLineSegment3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D position1, GrVisualAnimatedVector3D position2, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualLineSegment3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D position1, GrVisualAnimatedVector3D position2)
         {
             return new GrVisualLineSegment3D(
                 name,
                 style, 
                 Float64Vector3D.Zero, 
                 Float64Vector3D.E1, 
-                animationSpecs
+                position1.AnimationSpecs
             ).SetAnimatedPositions(position1, position2);
         }
 
@@ -104,8 +103,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
         private GrVisualLineSegment3D(string name, GrVisualCurveStyle3D style, IFloat64Vector3D position1, IFloat64Vector3D position2, GrVisualAnimationSpecs animationSpecs) 
             : base(name, style, animationSpecs)
         {
-            if (position1.Subtract(position2).IsZeroVector())
-                throw new InvalidOperationException();
+            //if (position1.Subtract(position2).IsZeroVector())
+            //    throw new InvalidOperationException();
 
             Position1 = position1;
             Position2 = position2;
@@ -118,10 +117,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
         {
             return Position1.IsValid() &&
                    Position2.IsValid() &&
-                   !Position1.GetDistanceSquaredToPoint(Position2).IsZero() &&
-                   GetAnimatedGeometries().All(g => 
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   //!Position1.GetDistanceSquaredToPoint(Position2).IsZero() &&
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
 
         public override IPointsPath3D GetPositionsPath()
@@ -142,7 +139,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
             );
         }
 
-        public GrVisualLineSegment3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualLineSegment3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
             
@@ -219,7 +216,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

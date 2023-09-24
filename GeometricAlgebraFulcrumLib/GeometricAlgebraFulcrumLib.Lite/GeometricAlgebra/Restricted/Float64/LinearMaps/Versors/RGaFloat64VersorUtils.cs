@@ -171,7 +171,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
 
                     if (j > i)
                         mappedBasisVectors[j] = reflectedVector.GetVectorPart(
-                            index => index > basisVectorIndex
+                            (int index) => index > basisVectorIndex
                         );
                 }
             }

@@ -1,5 +1,4 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Matrices;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 

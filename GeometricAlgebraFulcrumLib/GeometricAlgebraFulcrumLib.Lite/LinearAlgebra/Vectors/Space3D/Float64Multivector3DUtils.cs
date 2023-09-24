@@ -523,7 +523,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Vector3D ProjectOn(this Float64Vector3D mv1, Float64Bivector3D mv2)
+        public static Float64Vector3D ProjectOnBivector(this Float64Vector3D mv1, Float64Bivector3D mv2)
         {
             return mv1.Lcp(mv2).Lcp(mv2.Inverse());
         }

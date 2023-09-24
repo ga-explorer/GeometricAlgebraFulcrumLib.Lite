@@ -5,7 +5,7 @@ using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 
 public sealed record Float64Scalar3D :
-    IFloat64Multivector3D
+    IFloat64KVector3D
 {
     public static Float64Scalar3D Zero { get; }
         = new Float64Scalar3D(Float64Scalar.Zero);
@@ -120,6 +120,9 @@ public sealed record Float64Scalar3D :
 
     public int VSpaceDimensions 
         => 3;
+
+    public int Grade 
+        => 0;
 
     public Float64Scalar Scalar { get; }
 

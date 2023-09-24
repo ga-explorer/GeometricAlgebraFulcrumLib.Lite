@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
@@ -121,9 +119,9 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Ada
         public double Length
             => RootNode.Length1;
 
-        public Float64Range1D ParameterRange { get; }
+        public Float64ScalarRange ParameterRange { get; }
 
-        public double GetLength()
+        public Float64Scalar GetLength()
         {
             var arcLength = 0d;
 
@@ -166,7 +164,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Ada
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public AdaptiveCurve2D(IParametricCurve2D surface, Float64Range1D parameterValueRange)
+        public AdaptiveCurve2D(IParametricCurve2D surface, Float64ScalarRange parameterValueRange)
         {
             Curve = surface;
             ParameterRange = parameterValueRange;
@@ -181,7 +179,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Ada
             );
 
             Curve = surface;
-            ParameterRange = Float64Range1D.Create(minParameterValue, maxParameterValue);
+            ParameterRange = Float64ScalarRange.Create(minParameterValue, maxParameterValue);
             RootNode = null;
         }
 
@@ -189,7 +187,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Ada
         public AdaptiveCurve2D(IParametricCurve2D surface)
         {
             Curve = surface;
-            ParameterRange = Float64Range1D.Create(0, 1);
+            ParameterRange = Float64ScalarRange.Create(0, 1);
             RootNode = null;
         }
 
@@ -431,7 +429,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Ada
                 yield return sample2.GetFrame();
         }
 
-        public double ParameterToLength(double parameterValue)
+        public Float64Scalar ParameterToLength(double parameterValue)
         {
             parameterValue = parameterValue.ClampPeriodic(ParameterValueMin, ParameterValueMax);
 
@@ -460,7 +458,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Ada
             }
         }
 
-        public double LengthToParameter(double length)
+        public Float64Scalar LengthToParameter(double length)
         {
             if (!RootNode.ContainsLength(length))
                 throw new ArgumentOutOfRangeException();

@@ -157,6 +157,24 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         {
             return Processor.CreateZeroVector();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<double, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, double, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Bivector GetBivectorPart()

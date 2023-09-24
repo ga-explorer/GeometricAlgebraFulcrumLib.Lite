@@ -67,18 +67,18 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Ima
             );
         }
         
-        public static GrVisualLaTeXText3D CreateAnimated(string name, WclHtmlImageDataUrlCache pngCache, GrVisualAnimatedVector3D position, double scalingFactor, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualLaTeXText3D CreateAnimated(string name, WclHtmlImageDataUrlCache pngCache, GrVisualAnimatedVector3D position, double scalingFactor)
         {
             return new GrVisualLaTeXText3D(
                 name, 
                 pngCache, 
                 Float64Vector3D.Zero, 
                 scalingFactor, 
-                animationSpecs
+                position.AnimationSpecs
             ).SetAnimatedPosition(position);
         }
         
-        public static GrVisualLaTeXText3D CreateAnimated(string name, WclHtmlImageDataUrlCache pngCache, string key, GrVisualAnimatedVector3D position, double scalingFactor, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualLaTeXText3D CreateAnimated(string name, WclHtmlImageDataUrlCache pngCache, string key, GrVisualAnimatedVector3D position, double scalingFactor)
         {
             return new GrVisualLaTeXText3D(
                 name, 
@@ -86,7 +86,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Ima
                 key, 
                 Float64Vector3D.Zero, 
                 scalingFactor,
-                animationSpecs
+                position.AnimationSpecs
             ).SetAnimatedPosition(position);
         }
 
@@ -141,7 +141,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Ima
         public override bool IsValid()
         {
             return Position.IsValid() &&
-                   AnimatedPosition.IsNullOrValid(AnimationSpecs.TimeRange);
+                   AnimatedPosition.IsNullOrValid(AnimationSpecs.FrameTimeRange);
         }
 
         public override IReadOnlyList<GrVisualAnimatedGeometry> GetAnimatedGeometries()
@@ -157,7 +157,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Ima
             return animatedGeometries;
         }
         
-        public GrVisualLaTeXText3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualLaTeXText3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
             
@@ -182,7 +182,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Ima
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
 

@@ -5,7 +5,7 @@ using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
 {
     public sealed record Float64Trivector3D :
-        IFloat64Multivector3D
+        IFloat64KVector3D
     {
         public static Float64Trivector3D Zero { get; }
             = new Float64Trivector3D(Float64Scalar.Zero);
@@ -97,6 +97,9 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
 
 
         public int VSpaceDimensions 
+            => 3;
+
+        public int Grade 
             => 3;
 
         public Float64Scalar Scalar 
@@ -207,17 +210,29 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Float64Scalar3D Dual()
+        public Float64Scalar3D Dual3D()
         {
             return Float64Scalar3D.Create(-Scalar123);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Float64Scalar3D UnDual()
+        public Float64Scalar3D Dual3D(double scalingFactor)
+        {
+            return Float64Scalar3D.Create(-Scalar123 * scalingFactor);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Scalar3D UnDual3D()
         {
             return Float64Scalar3D.Create(Scalar123);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Scalar3D UnDual3D(double scalingFactor)
+        {
+            return Float64Scalar3D.Create(Scalar123 * scalingFactor);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<Float64Scalar> GetEnumerator()
         {

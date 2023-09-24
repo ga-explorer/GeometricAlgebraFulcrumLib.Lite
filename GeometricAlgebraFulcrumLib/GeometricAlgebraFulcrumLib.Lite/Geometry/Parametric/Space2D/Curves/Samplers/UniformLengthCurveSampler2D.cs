@@ -2,9 +2,8 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Samplers;
 
@@ -16,9 +15,9 @@ public class UniformLengthCurveSampler2D :
     public IParametricCurve2D Curve 
         => ArcLengthCurve;
 
-    public Float64Range1D ParameterRange { get; private set; }
+    public Float64ScalarRange ParameterRange { get; private set; }
 
-    public Float64Range1D LengthRange { get; private set; }
+    public Float64ScalarRange LengthRange { get; private set; }
 
     public bool IsPeriodic { get; private set; }
 
@@ -47,7 +46,7 @@ public class UniformLengthCurveSampler2D :
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public UniformLengthCurveSampler2D(IArcLengthCurve2D curve, Float64Range1D parameterRange, int count, bool isPeriodic = false)
+    public UniformLengthCurveSampler2D(IArcLengthCurve2D curve, Float64ScalarRange parameterRange, int count, bool isPeriodic = false)
     {
         if ((isPeriodic && count < 1) || (!isPeriodic && count < 2))
             throw new ArgumentOutOfRangeException(nameof(count));
@@ -56,7 +55,7 @@ public class UniformLengthCurveSampler2D :
         IsPeriodic = isPeriodic;
         ArcLengthCurve = curve;
         ParameterRange = parameterRange;
-        LengthRange = Float64Range1D.Create(
+        LengthRange = Float64ScalarRange.Create(
             curve.ParameterToLength(parameterRange.MinValue),
             curve.ParameterToLength(parameterRange.MaxValue)
         );
@@ -77,7 +76,7 @@ public class UniformLengthCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public UniformLengthCurveSampler2D SetCurve(IArcLengthCurve2D curve, Float64Range1D parameterRange, int count, bool isPeriodic)
+    public UniformLengthCurveSampler2D SetCurve(IArcLengthCurve2D curve, Float64ScalarRange parameterRange, int count, bool isPeriodic)
     {
         if ((isPeriodic && count < 1) || (!isPeriodic && count < 2))
             throw new ArgumentOutOfRangeException(nameof(count));
@@ -86,7 +85,7 @@ public class UniformLengthCurveSampler2D :
         ParameterRange = parameterRange;
         Count = count;
         IsPeriodic = isPeriodic;
-        LengthRange = Float64Range1D.Create(
+        LengthRange = Float64ScalarRange.Create(
             curve.ParameterToLength(parameterRange.MinValue),
             curve.ParameterToLength(parameterRange.MaxValue)
         );
@@ -100,7 +99,7 @@ public class UniformLengthCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetParameterValues()
+    public IEnumerable<Float64Scalar> GetParameterValues()
     {
         return Enumerable
             .Range(0, Count)
@@ -112,12 +111,12 @@ public class UniformLengthCurveSampler2D :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<Float64Range1D> GetParameterSections()
+    public IEnumerable<Float64ScalarRange> GetParameterSections()
     {
         return Enumerable
             .Range(0, Count)
             .Select(i => 
-                Float64Range1D.Create(
+                Float64ScalarRange.Create(
                     ArcLengthCurve.LengthToParameter(LengthRange.MinValue + i * CurveSectionLength),
                     ArcLengthCurve.LengthToParameter(LengthRange.MinValue + (i + 1) * CurveSectionLength)
                 )

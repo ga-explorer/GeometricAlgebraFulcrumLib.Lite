@@ -75,7 +75,7 @@ public sealed class GrVisualParallelepipedSurface3D :
         );
     }
         
-    public static GrVisualParallelepipedSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualParallelepipedSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position)
     {
         return new GrVisualParallelepipedSurface3D(
             name,
@@ -84,11 +84,11 @@ public sealed class GrVisualParallelepipedSurface3D :
             Float64Vector3D.E1,
             Float64Vector3D.E2,
             Float64Vector3D.E3,
-            animationSpecs
+            position.AnimationSpecs
         ).SetAnimatedPosition(position);
     }
     
-    public static GrVisualParallelepipedSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, IFloat64Vector3D position, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimatedVector3D direction3, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualParallelepipedSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, IFloat64Vector3D position, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimatedVector3D direction3)
     {
         return new GrVisualParallelepipedSurface3D(
             name,
@@ -97,11 +97,11 @@ public sealed class GrVisualParallelepipedSurface3D :
             Float64Vector3D.E1,
             Float64Vector3D.E2,
             Float64Vector3D.E3,
-            animationSpecs
+            direction1.AnimationSpecs
         ).SetAnimatedDirections(direction1, direction2, direction3);
     }
 
-    public static GrVisualParallelepipedSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimatedVector3D direction3, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualParallelepipedSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimatedVector3D direction3)
     {
         return new GrVisualParallelepipedSurface3D(
             name,
@@ -110,7 +110,7 @@ public sealed class GrVisualParallelepipedSurface3D :
             Float64Vector3D.E1,
             Float64Vector3D.E2,
             Float64Vector3D.E3,
-            animationSpecs
+            position.AnimationSpecs
         ).SetAnimatedPositionDirections(position, direction1, direction2, direction3);
     }
 
@@ -409,9 +409,7 @@ public sealed class GrVisualParallelepipedSurface3D :
                Direction1.IsValid() &&
                Direction2.IsValid() &&
                Direction3.IsValid() &&
-               GetAnimatedGeometries().All(g => 
-                   g.IsValid(AnimationSpecs.TimeRange)
-               );
+               GetAnimatedGeometries().All(g => g.IsValid());
     }
         
     public override IReadOnlyList<GrVisualAnimatedGeometry> GetAnimatedGeometries()
@@ -563,7 +561,7 @@ public sealed class GrVisualParallelepipedSurface3D :
         };
     }
 
-    public GrVisualParallelepipedSurface3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+    public GrVisualParallelepipedSurface3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
     {
         AnimatedVisibility = visibility;
 
@@ -751,7 +749,7 @@ public sealed class GrVisualParallelepipedSurface3D :
     {
         Debug.Assert(IsValid());
 
-        foreach (var frameIndex in KeyFrameRange)
+        foreach (var frameIndex in GetValidFrameIndexSet())
         {
             var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

@@ -1,5 +1,5 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable
 {
@@ -19,7 +19,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable
             );
         }
 
-        public static LimitedLine3D Create(IFloat64Vector3D origin, IFloat64Vector3D direction, Float64Range1D parameterLimits)
+        public static LimitedLine3D Create(IFloat64Vector3D origin, IFloat64Vector3D direction, Float64ScalarRange parameterLimits)
         {
             return new LimitedLine3D(
                 origin.X,

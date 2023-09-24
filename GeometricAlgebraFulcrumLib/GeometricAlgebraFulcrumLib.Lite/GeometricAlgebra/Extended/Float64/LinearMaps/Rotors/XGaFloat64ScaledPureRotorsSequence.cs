@@ -337,17 +337,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Line
                     (kv, rotor) => rotor.OmMap(kv)
                 );
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override XGaFloat64KVector OmMap(XGaFloat64KVector mv)
-        {
-            return _rotorsList
-                .Aggregate(
-                    mv, 
-                    (kv, rotor) => rotor.OmMap(kv)
-                );
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override XGaFloat64Multivector OmMap(XGaFloat64Multivector mv)
         {

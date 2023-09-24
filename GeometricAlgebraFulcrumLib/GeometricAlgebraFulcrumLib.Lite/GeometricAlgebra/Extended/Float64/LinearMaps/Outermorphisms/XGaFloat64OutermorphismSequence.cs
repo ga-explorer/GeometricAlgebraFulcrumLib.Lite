@@ -174,13 +174,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Line
         {
             return _outermorphismList.OmMap(kVector).GetHigherKVectorPart(kVector.Grade);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override XGaFloat64KVector OmMap(XGaFloat64KVector kVector)
-        {
-            return _outermorphismList.OmMap(kVector);
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override XGaFloat64Multivector OmMap(XGaFloat64Multivector multivector)
         {

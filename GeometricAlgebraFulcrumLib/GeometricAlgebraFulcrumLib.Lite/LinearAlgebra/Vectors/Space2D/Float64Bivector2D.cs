@@ -19,7 +19,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
         
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Bivector2D Create(Float64Scalar scalar12)
+        public static Float64Bivector2D Create(double scalar12)
         {
             return new Float64Bivector2D(scalar12);
         }
@@ -211,6 +211,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
         public Float64Bivector2D Inverse()
         {
             return Negative(1d / NormSquared().Value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Scalar2D Normal2D()
+        {
+            return Float64Scalar2D.Create(Scalar12);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

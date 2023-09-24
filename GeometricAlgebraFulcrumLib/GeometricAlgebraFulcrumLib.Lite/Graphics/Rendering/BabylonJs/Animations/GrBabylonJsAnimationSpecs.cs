@@ -20,7 +20,7 @@ public sealed class GrBabylonJsAnimationSpecs
     public GrBabylonJsAnimationSpecs(GrVisualAnimationSpecs visualAnimationSpecs)
     {
         var frameRate = visualAnimationSpecs.FrameRate;
-        var frameRange = visualAnimationSpecs.FrameRange;
+        var frameRange = visualAnimationSpecs.FrameIndexRange;
 
         if (frameRate < 1)
             throw new ArgumentOutOfRangeException(nameof(frameRate));
@@ -32,7 +32,7 @@ public sealed class GrBabylonJsAnimationSpecs
     public GrBabylonJsAnimationSpecs(GrVisualElementWithAnimation3D visualElement)
     {
         var frameRate = visualElement.AnimationSpecs.FrameRate;
-        var frameRange = visualElement.AnimationSpecs.FrameRange;
+        var frameRange = visualElement.AnimationSpecs.FrameIndexRange;
 
         if (frameRate < 1)
             throw new ArgumentOutOfRangeException(nameof(frameRate));

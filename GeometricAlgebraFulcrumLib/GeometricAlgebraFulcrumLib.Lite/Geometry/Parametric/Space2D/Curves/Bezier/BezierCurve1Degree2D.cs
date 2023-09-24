@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Bezier
 {
@@ -13,8 +12,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Bez
 
         public Float64Vector2D Point2 { get; }
         
-        public Float64Range1D ParameterRange 
-            => Float64Range1D.Infinite;
+        public Float64ScalarRange ParameterRange 
+            => Float64ScalarRange.Infinite;
 
 
         public BezierCurve1Degree2D(IFloat64Vector2D point1, IFloat64Vector2D point2)

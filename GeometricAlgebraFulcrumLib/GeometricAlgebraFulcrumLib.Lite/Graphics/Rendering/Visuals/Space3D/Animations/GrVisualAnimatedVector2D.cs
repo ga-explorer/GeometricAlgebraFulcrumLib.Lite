@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Functions;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Functions.Polynomials;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 
@@ -14,35 +13,35 @@ public class GrVisualAnimatedVector2D :
     IParametricCurve2D
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static GrVisualAnimatedVector2D Create(IParametricCurve2D baseCurve, Float64Range1D timeRange)
+    public static GrVisualAnimatedVector2D Create(GrVisualAnimationSpecs animationSpecs, IParametricCurve2D baseCurve)
     {
         return new GrVisualAnimatedVector2D(
+            animationSpecs,
             baseCurve,
-            timeRange,
-            timeRange
+            animationSpecs.FrameTimeRange
         );
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static GrVisualAnimatedVector2D Create(IParametricCurve2D baseCurve, Float64Range1D baseParameterRange, Float64Range1D timeRange)
-    {
-        return new GrVisualAnimatedVector2D(
-            baseCurve,
-            baseParameterRange,
-            timeRange
-        );
-    }
-
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GrVisualAnimatedVector2D Create(GrVisualAnimationSpecs animationSpecs, IParametricCurve2D baseCurve, Float64ScalarRange baseParameterRange)
+    {
+        return new GrVisualAnimatedVector2D(
+            animationSpecs,
+            baseCurve,
+            baseParameterRange
+        );
+    }
+    
+
     public static GrVisualAnimatedVector2D operator -(GrVisualAnimatedVector2D p1)
     {
         var baseCurve = ComputedParametricCurve2D.Create(time => -p1.GetPoint(time),
             time => -p1.GetDerivative1Point(time));
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
@@ -52,9 +51,9 @@ public class GrVisualAnimatedVector2D :
             p1.GetDerivative1Point);
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
@@ -64,24 +63,24 @@ public class GrVisualAnimatedVector2D :
             p2.GetDerivative1Point);
 
         return new GrVisualAnimatedVector2D(
+            p2.AnimationSpecs,
             baseCurve,
-            p2.TimeRange,
-            p2.TimeRange
+            p2.FrameTimeRange
         );
     }
 
     public static GrVisualAnimatedVector2D operator +(GrVisualAnimatedVector2D p1, GrVisualAnimatedVector2D p2)
     {
-        if (p1.TimeRange != p2.TimeRange)
+        if (p1.AnimationSpecs != p2.AnimationSpecs)
             throw new InvalidOperationException();
 
         var baseCurve = ComputedParametricCurve2D.Create(time => p1.GetPoint(time) + p2.GetPoint(time),
             time => p1.GetDerivative1Point(time) + p2.GetDerivative1Point(time));
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
@@ -91,9 +90,9 @@ public class GrVisualAnimatedVector2D :
             p1.GetDerivative1Point);
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
@@ -103,24 +102,24 @@ public class GrVisualAnimatedVector2D :
             time => -p2.GetDerivative1Point(time));
 
         return new GrVisualAnimatedVector2D(
+            p2.AnimationSpecs,
             baseCurve,
-            p2.TimeRange,
-            p2.TimeRange
+            p2.FrameTimeRange
         );
     }
 
     public static GrVisualAnimatedVector2D operator -(GrVisualAnimatedVector2D p1, GrVisualAnimatedVector2D p2)
     {
-        if (p1.TimeRange != p2.TimeRange)
+        if (p1.AnimationSpecs != p2.AnimationSpecs)
             throw new InvalidOperationException();
 
         var baseCurve = ComputedParametricCurve2D.Create(time => p1.GetPoint(time) - p2.GetPoint(time),
             time => p1.GetDerivative1Point(time) - p2.GetDerivative1Point(time));
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
 
@@ -130,9 +129,9 @@ public class GrVisualAnimatedVector2D :
             time => p1 * p2.GetDerivative1Point(time));
 
         return new GrVisualAnimatedVector2D(
+            p2.AnimationSpecs,
             baseCurve,
-            p2.TimeRange,
-            p2.TimeRange
+            p2.FrameTimeRange
         );
     }
     
@@ -142,39 +141,39 @@ public class GrVisualAnimatedVector2D :
             time => p1.GetDerivative1Point(time) * p2);
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
-    public static GrVisualAnimatedVector2D operator *(GrVisualAnimatedVector1D p1, GrVisualAnimatedVector2D p2)
+    public static GrVisualAnimatedVector2D operator *(GrVisualAnimatedScalar p1, GrVisualAnimatedVector2D p2)
     {
-        if (p1.TimeRange != p2.TimeRange)
+        if (p1.AnimationSpecs != p2.AnimationSpecs)
             throw new InvalidOperationException();
 
-        var baseCurve = ComputedParametricCurve2D.Create(time => p1.GetPoint(time) * p2.GetPoint(time),
-            time => p1.GetDerivative1Point(time) * p2.GetPoint(time) + p2.GetDerivative1Point(time) * p1.GetPoint(time));
+        var baseCurve = ComputedParametricCurve2D.Create(time => p1.GetValue(time) * p2.GetPoint(time),
+            time => p1.GetDerivative1Value(time) * p2.GetPoint(time) + p2.GetDerivative1Point(time) * p1.GetValue(time));
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
-    public static GrVisualAnimatedVector2D operator *(GrVisualAnimatedVector2D p1, GrVisualAnimatedVector1D p2)
+    public static GrVisualAnimatedVector2D operator *(GrVisualAnimatedVector2D p1, GrVisualAnimatedScalar p2)
     {
-        if (p1.TimeRange != p2.TimeRange)
+        if (p1.AnimationSpecs != p2.AnimationSpecs)
             throw new InvalidOperationException();
 
-        var baseCurve = ComputedParametricCurve2D.Create(time => p1.GetPoint(time) * p2.GetPoint(time),
-            time => p1.GetDerivative1Point(time) * p2.GetPoint(time) + p2.GetDerivative1Point(time) * p1.GetPoint(time));
+        var baseCurve = ComputedParametricCurve2D.Create(time => p1.GetPoint(time) * p2.GetValue(time),
+            time => p1.GetDerivative1Point(time) * p2.GetValue(time) + p2.GetDerivative1Value(time) * p1.GetPoint(time));
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
 
@@ -186,19 +185,17 @@ public class GrVisualAnimatedVector2D :
             time => p1.GetDerivative1Point(time) * p2);
 
         return new GrVisualAnimatedVector2D(
+            p1.AnimationSpecs,
             baseCurve,
-            p1.TimeRange,
-            p1.TimeRange
+            p1.FrameTimeRange
         );
     }
     
     
     public IParametricCurve2D BaseCurve { get; }
     
-    public Float64Range1D BaseParameterRange { get; }
-
-    public override Float64Range1D TimeRange { get; }
-
+    public Float64ScalarRange BaseParameterRange { get; }
+    
     public DifferentialFunction BaseParameterToTimeMap { get; }
 
     public DifferentialFunction TimeToBaseParameterMap { get; }
@@ -209,27 +206,27 @@ public class GrVisualAnimatedVector2D :
     public double MaxBaseParameter 
         => BaseParameterRange.MaxValue;
 
-    public Float64Range1D ParameterRange 
-        => TimeRange;
+    public Float64ScalarRange ParameterRange 
+        => FrameTimeRange;
 
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private GrVisualAnimatedVector2D(IParametricCurve2D baseCurve, Float64Range1D baseParameterRange, Float64Range1D timeRange)
+    private GrVisualAnimatedVector2D(GrVisualAnimationSpecs animationSpecs, IParametricCurve2D baseCurve, Float64ScalarRange baseParameterRange)
+        : base(animationSpecs)
     {
         BaseCurve = baseCurve;
         BaseParameterRange = baseParameterRange;
-        TimeRange = timeRange;
 
         BaseParameterToTimeMap = DfAffinePolynomial.Create(
             MinBaseParameter,
             MaxBaseParameter,
-            MinTime,
-            MaxTime
+            MinFrameTime,
+            MaxFrameTime
         );
             
         TimeToBaseParameterMap = DfAffinePolynomial.Create(
-            MinTime,
-            MaxTime,
+            MinFrameTime,
+            MaxFrameTime,
             MinBaseParameter,
             MaxBaseParameter
         );
@@ -241,9 +238,9 @@ public class GrVisualAnimatedVector2D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public sealed override bool IsValid()
     {
-        return TimeRange.IsValid() &&
-               TimeRange.IsFinite &&
-               TimeRange.MinValue >= 0 &&
+        return FrameTimeRange.IsValid() &&
+               FrameTimeRange.IsFinite &&
+               FrameTimeRange.MinValue >= 0 &&
                BaseCurve.IsValid() &&
                BaseParameterRange.IsValid() &&
                BaseParameterRange.IsFinite;
@@ -253,7 +250,7 @@ public class GrVisualAnimatedVector2D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Float64Vector2D GetPoint(double time)
     {
-        if (!TimeRange.Contains(time))
+        if (!FrameTimeRange.Contains(time))
             throw new ArgumentOutOfRangeException();
 
         return BaseCurve.GetPoint(
@@ -264,7 +261,7 @@ public class GrVisualAnimatedVector2D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Float64Vector2D GetDerivative1Point(double time)
     {
-        if (!TimeRange.Contains(time))
+        if (!FrameTimeRange.Contains(time))
             throw new ArgumentOutOfRangeException();
 
         return BaseCurve.GetDerivative1Point(
@@ -275,7 +272,7 @@ public class GrVisualAnimatedVector2D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ParametricCurveLocalFrame2D GetFrame(double time)
     {
-        if (!TimeRange.Contains(time))
+        if (!FrameTimeRange.Contains(time))
             throw new ArgumentOutOfRangeException();
 
         return BaseCurve.GetFrame(
@@ -286,7 +283,7 @@ public class GrVisualAnimatedVector2D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public IEnumerable<KeyValuePair<int, Float64Vector2D>> GetKeyFrameIndexPositionPairs(int frameRate)
     {
-        return GetKeyFrameIndexTimePairs(frameRate).Select(
+        return FrameIndexTimePairs.Select(
             indexTimePair =>
             {
                 var (frameIndex, time) = indexTimePair;
@@ -304,7 +301,7 @@ public class GrVisualAnimatedVector2D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public IEnumerable<KeyValuePair<int, double>> GetKeyFrameIndexValuePairs(int frameRate, Func<Float64Vector2D, double> positionToValueMap)
     {
-        return GetKeyFrameIndexTimePairs(frameRate).Select(
+        return FrameIndexTimePairs.Select(
             indexTimePair =>
             {
                 var (frameIndex, time) = indexTimePair;

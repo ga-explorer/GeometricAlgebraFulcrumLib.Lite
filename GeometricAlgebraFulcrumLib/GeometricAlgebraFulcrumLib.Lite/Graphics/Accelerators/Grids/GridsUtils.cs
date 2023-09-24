@@ -5,6 +5,7 @@ using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders.Space2D.Immutable;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders.Space3D.Immutable;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids
 {
@@ -57,11 +58,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids
             return AccGridLineTraverser2D.Create(
                 grid,
                 line,
-                Float64Range1D.Create(lineParamValue1, lineParamValue2)
+                Float64ScalarRange.Create(lineParamValue1, lineParamValue2)
             );
         }
 
-        public static AccGridLineTraverser2D GetLineTraverser(this IAccGrid2D<IFiniteGeometricShape2D> grid, ILine2D line, Float64Range1D lineParamRange)
+        public static AccGridLineTraverser2D GetLineTraverser(this IAccGrid2D<IFiniteGeometricShape2D> grid, ILine2D line, Float64ScalarRange lineParamRange)
         {
             return AccGridLineTraverser2D.Create(
                 grid,
@@ -121,11 +122,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids
             return AccGridLineTraverser3D.Create(
                 grid,
                 line,
-                Float64Range1D.Create(lineParamValue1, lineParamValue2)
+                Float64ScalarRange.Create(lineParamValue1, lineParamValue2)
             );
         }
 
-        public static AccGridLineTraverser3D GetLineTraverser(this IAccGrid3D<IFiniteGeometricShape3D> grid, ILine3D line, Float64Range1D lineParamRange)
+        public static AccGridLineTraverser3D GetLineTraverser(this IAccGrid3D<IFiniteGeometricShape3D> grid, ILine3D line, Float64ScalarRange lineParamRange)
         {
             return AccGridLineTraverser3D.Create(
                 grid,

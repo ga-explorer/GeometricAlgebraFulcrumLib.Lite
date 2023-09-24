@@ -13,6 +13,67 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 public static class Float64Vector3DUtils
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D ProjectOnXAxis(this IFloat64Vector3D vector)
+    {
+        return Float64Vector3D.Create(
+            vector.X, 
+            Float64Scalar.Zero, 
+            Float64Scalar.Zero
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D ProjectOnYAxis(this IFloat64Vector3D vector)
+    {
+        return Float64Vector3D.Create(
+            Float64Scalar.Zero, 
+            vector.Y, 
+            Float64Scalar.Zero
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D ProjectOnZAxis(this IFloat64Vector3D vector)
+    {
+        return Float64Vector3D.Create(
+            Float64Scalar.Zero, 
+            Float64Scalar.Zero,
+            vector.Z
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D ProjectOnXyPlane(this IFloat64Vector3D vector)
+    {
+        return Float64Vector3D.Create(
+            vector.X, 
+            vector.Y, 
+            Float64Scalar.Zero
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D ProjectOnXzPlane(this IFloat64Vector3D vector)
+    {
+        return Float64Vector3D.Create(
+            vector.X, 
+            Float64Scalar.Zero,
+            vector.Z
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D ProjectOnYzPlane(this IFloat64Vector3D vector)
+    {
+        return Float64Vector3D.Create(
+            Float64Scalar.Zero, 
+            vector.Y, 
+            vector.Z
+        );
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Float64Vector3D ClampTo(this IFloat64Vector3D tuple, IFloat64Vector3D maxTuple)
     {
         return Float64Vector3D.Create(
@@ -361,6 +422,16 @@ public static class Float64Vector3DUtils
             vectorY * vectorY +
             vectorZ * vectorZ
         );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector3D DivideByNorm(this IFloat64Vector3D vector)
+    {
+        var norm = vector.ENorm();
+
+        return norm.IsZero() 
+            ? vector.ToVector3D() 
+            : vector.Divide(norm);
     }
 
     /// <summary>

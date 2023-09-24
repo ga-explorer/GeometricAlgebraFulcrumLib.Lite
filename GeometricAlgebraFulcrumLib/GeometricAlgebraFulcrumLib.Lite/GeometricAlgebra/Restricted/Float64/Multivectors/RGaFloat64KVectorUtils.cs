@@ -58,6 +58,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RGaFloat64KVector RemoveSmallTerms(this RGaFloat64KVector mv, double epsilon = 1e-12)
+        {
+            return mv switch
+            {
+                RGaFloat64Scalar s => s,
+                RGaFloat64Vector v => v.RemoveSmallTerms(epsilon),
+                RGaFloat64Bivector bv => bv.RemoveSmallTerms(epsilon),
+                RGaFloat64HigherKVector kv => kv.RemoveSmallTerms(epsilon),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RGaFloat64KVector MapScalars(this RGaFloat64KVector mv, Func<double, double> scalarMapping)

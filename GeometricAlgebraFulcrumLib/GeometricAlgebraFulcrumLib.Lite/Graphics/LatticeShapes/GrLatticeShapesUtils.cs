@@ -3,7 +3,7 @@ using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Triangles;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Triangles.Immutable;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes.Surfaces;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Primitives;

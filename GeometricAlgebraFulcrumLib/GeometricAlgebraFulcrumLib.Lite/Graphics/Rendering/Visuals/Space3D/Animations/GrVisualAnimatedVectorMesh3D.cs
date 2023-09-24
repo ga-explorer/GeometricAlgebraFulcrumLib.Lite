@@ -6,7 +6,6 @@ using DataStructuresLib.Collections;
 using DataStructuresLib.Extensions;
 using DataStructuresLib.Sequences.Periodic1D;
 using DataStructuresLib.Sequences.Periodic2D;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Meshes.PointsMesh;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Meshes.PointsMesh.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
@@ -18,17 +17,24 @@ public class GrVisualAnimatedVectorMesh3D :
     IPeriodicSequence2D<GrVisualAnimatedVector3D>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static GrVisualAnimatedVectorMesh3D Create(Float64Range1D timeRange, int count1, int count2)
+    public static GrVisualAnimatedVectorMesh3D Create(GrVisualAnimationSpecs animationSpecs, int count1, int count2)
     {
-        return new GrVisualAnimatedVectorMesh3D(timeRange, count1, count2);
+        return new GrVisualAnimatedVectorMesh3D(
+            animationSpecs, 
+            count1, 
+            count2
+        );
     }
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static GrVisualAnimatedVectorMesh3D Create(Float64Range1D timeRange, GrVisualAnimatedVector3D[,] dataArray)
+    public static GrVisualAnimatedVectorMesh3D Create(GrVisualAnimationSpecs animationSpecs, GrVisualAnimatedVector3D[,] dataArray)
     {
-        return new GrVisualAnimatedVectorMesh3D(timeRange, dataArray);
+        return new GrVisualAnimatedVectorMesh3D(
+            animationSpecs, 
+            dataArray
+        );
     }
-
+    
     
     private readonly GrVisualAnimatedVector3D[,] _dataArray;
 
@@ -54,7 +60,7 @@ public class GrVisualAnimatedVectorMesh3D :
         {
             var (index1, index2) = this.GetItemIndexPair(index);
 
-            if (value.TimeRange != TimeRange)
+            if (value.FrameTimeRange != FrameTimeRange)
                 throw new InvalidOperationException();
 
             _dataArray[index1, index2] = value;
@@ -73,26 +79,24 @@ public class GrVisualAnimatedVectorMesh3D :
     public bool IsOperator
         => false;
     
-    public override Float64Range1D TimeRange { get; }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private GrVisualAnimatedVectorMesh3D(Float64Range1D timeRange, int count1, int count2)
+    private GrVisualAnimatedVectorMesh3D(GrVisualAnimationSpecs animationSpecs, int count1, int count2)
+        : base(animationSpecs)
     {
-        TimeRange = timeRange;
         _dataArray = new GrVisualAnimatedVector3D[count1, count2];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private GrVisualAnimatedVectorMesh3D(Float64Range1D timeRange, GrVisualAnimatedVector3D[,] dataArray)
+    private GrVisualAnimatedVectorMesh3D(GrVisualAnimationSpecs animationSpecs, GrVisualAnimatedVector3D[,] dataArray)
+        : base(animationSpecs)
     {
         Debug.Assert(
             dataArray.GetItems(
-                p => p.TimeRange == timeRange
+                p => p.AnimationSpecs == animationSpecs
             ).All(p => p)
         );
 
-        TimeRange = timeRange;
         _dataArray = dataArray;
     }
 
@@ -102,7 +106,7 @@ public class GrVisualAnimatedVectorMesh3D :
     {
         return _dataArray.GetItems(
             p => p
-        ).All(p => p.IsValid() && p.TimeRange == TimeRange);
+        ).All(p => p.IsValid() && p.FrameTimeRange == FrameTimeRange);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -117,7 +121,7 @@ public class GrVisualAnimatedVectorMesh3D :
         var dataArray = 
             GetSliceAt(dimension, index).ToArray();
 
-        return GrVisualAnimatedVectorPath3D.Create(TimeRange, dataArray);
+        return GrVisualAnimatedVectorPath3D.Create(AnimationSpecs, dataArray);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

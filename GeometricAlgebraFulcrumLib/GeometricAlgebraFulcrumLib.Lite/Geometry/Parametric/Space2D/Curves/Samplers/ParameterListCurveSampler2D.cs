@@ -3,9 +3,8 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Samplers;
 
@@ -14,15 +13,15 @@ public class ParameterListCurveSampler2D :
 {
     public IParametricCurve2D Curve { get; private set; }
 
-    public Float64Range1D ParameterRange
-        => Float64Range1D.Create(
+    public Float64ScalarRange ParameterRange
+        => Float64ScalarRange.Create(
             ParameterValueSet[0], 
             ParameterValueSet[^1]
         );
 
     public bool IsPeriodic { get; private set; }
 
-    public ImmutableSortedSet<double> ParameterValueSet { get; private set; }
+    public ImmutableSortedSet<Float64Scalar> ParameterValueSet { get; private set; }
 
     public int Count 
         => ParameterValueSet.Count;
@@ -48,7 +47,7 @@ public class ParameterListCurveSampler2D :
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ParameterListCurveSampler2D(IParametricCurve2D curve, ImmutableSortedSet<double> parameterValueSet, bool isPeriodic = false)
+    public ParameterListCurveSampler2D(IParametricCurve2D curve, ImmutableSortedSet<Float64Scalar> parameterValueSet, bool isPeriodic = false)
     {
         IsPeriodic = isPeriodic;
         Curve = curve;
@@ -68,7 +67,7 @@ public class ParameterListCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ParameterListCurveSampler2D SetCurve(IParametricCurve2D curve, ImmutableSortedSet<double> parameterValueSet, bool isPeriodic)
+    public ParameterListCurveSampler2D SetCurve(IParametricCurve2D curve, ImmutableSortedSet<Float64Scalar> parameterValueSet, bool isPeriodic)
     {
         IsPeriodic = isPeriodic;
         Curve = curve;
@@ -80,7 +79,7 @@ public class ParameterListCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetParameterValues()
+    public IEnumerable<Float64Scalar> GetParameterValues()
     {
         return Enumerable
             .Range(0, Count)
@@ -88,13 +87,13 @@ public class ParameterListCurveSampler2D :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<Float64Range1D> GetParameterSections()
+    public IEnumerable<Float64ScalarRange> GetParameterSections()
     {
         if (IsPeriodic)
             return Enumerable
                 .Range(0, Count)
                 .Select(i => 
-                    Float64Range1D.Create(
+                    Float64ScalarRange.Create(
                         ParameterValueSet[i],
                         ParameterValueSet[(i + 1).Mod(Count)]
                     )
@@ -103,7 +102,7 @@ public class ParameterListCurveSampler2D :
         return Enumerable
             .Range(0, Count - 1)
             .Select(i => 
-                Float64Range1D.Create(
+                Float64ScalarRange.Create(
                     ParameterValueSet[i],
                     ParameterValueSet[i + 1]
                 )

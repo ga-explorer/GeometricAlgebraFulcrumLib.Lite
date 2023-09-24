@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space1D.Curves.CatmullRom;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space1D.Scalars.CatmullRom;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using MathNet.Numerics;
@@ -33,8 +31,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Cat
         public int ControlPointCount
             => _pointList.Count;
         
-        public Float64Range1D ParameterRange 
-            => Float64Range1D.Infinite;
+        public Float64ScalarRange ParameterRange 
+            => Float64ScalarRange.Infinite;
 
 
         internal CatmullRomSpline2D(IEnumerable<IFloat64Vector2D> inputPointList, CatmullRomSplineType curveType, bool isClosed)

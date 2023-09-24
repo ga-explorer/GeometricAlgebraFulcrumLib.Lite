@@ -13,7 +13,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
     /// </summary>
     public sealed record Float64Vector3D :
         IFloat64Vector3D,
-        IFloat64Multivector3D
+        IFloat64KVector3D
     {
         public static Float64Vector3D Zero { get; } 
             = new Float64Vector3D(
@@ -70,12 +70,68 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
                 Float64Scalar.One, 
                 Float64Scalar.One
             );
+        
+        public static Float64Vector3D SymmetricNpp { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.NegativeOne,
+                Float64Scalar.One, 
+                Float64Scalar.One
+            );
 
+        public static Float64Vector3D SymmetricPnp { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.One,
+                Float64Scalar.NegativeOne, 
+                Float64Scalar.One
+            );
+        
+        public static Float64Vector3D SymmetricPpn { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.One,
+                Float64Scalar.One, 
+                Float64Scalar.NegativeOne
+            );
+        
+        public static Float64Vector3D SymmetricPnn { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.One,
+                Float64Scalar.NegativeOne, 
+                Float64Scalar.NegativeOne
+            );
+        
+        public static Float64Vector3D SymmetricNpn { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.NegativeOne,
+                Float64Scalar.One, 
+                Float64Scalar.NegativeOne
+            );
+        
+        public static Float64Vector3D SymmetricNnp { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.NegativeOne,
+                Float64Scalar.NegativeOne, 
+                Float64Scalar.One
+            );
+
+        public static Float64Vector3D NegativeSymmetric { get; } 
+            = new Float64Vector3D(
+                Float64Scalar.NegativeOne,
+                Float64Scalar.NegativeOne, 
+                Float64Scalar.NegativeOne
+            );
+        
         public static Float64Vector3D UnitSymmetric { get; } 
             = new Float64Vector3D(
                 Float64Scalar.InvSqrt3,
                 Float64Scalar.InvSqrt3, 
                 Float64Scalar.InvSqrt3
+            );
+
+        public static Float64Vector3D NegativeUnitSymmetric { get; } 
+            = new Float64Vector3D(
+                -Float64Scalar.InvSqrt3,
+                -Float64Scalar.InvSqrt3, 
+                -Float64Scalar.InvSqrt3
             );
 
         public static IReadOnlyList<Float64Vector3D> BasisVectors { get; }
@@ -126,6 +182,34 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
         public static Float64Vector3D CreateAffinePoint(Float64Scalar x, Float64Scalar y)
         {
             return new Float64Vector3D(x, y, 1);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D CreateEqualXyz(double x)
+        {
+            var scalar = new Float64Scalar(x);
+
+            return new Float64Vector3D(scalar, scalar, scalar);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D CreateUnitVector(double x, double y, double z)
+        {
+            var s = x * x + y * y + z * z;
+
+            if (s.IsZero()) return UnitSymmetric;
+
+            s = 1d / Math.Sqrt(s);
+
+            return new Float64Vector3D(x * s, y * s, z * s);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector3D CreateSymmetricVector(double vectorLength)
+        {
+            var scalar = new Float64Scalar(vectorLength / 3d.Sqrt());
+
+            return new Float64Vector3D(scalar, scalar, scalar);
         }
 
 
@@ -211,30 +295,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
             return new Float64Vector3D(v1.X * s, v1.Y * s, v1.Z * s);
         }
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Vector3D CreateUnitVector(double x, double y, double z)
-        {
-            var s = x * x + y * y + z * z;
-
-            if (s.IsZero()) return UnitSymmetric;
-
-            s = 1d / Math.Sqrt(s);
-
-            return new Float64Vector3D(x * s, y * s, z * s);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Vector3D CreateSymmetricVector(double x)
-        {
-            var scalar = new Float64Scalar(x);
-
-            return new Float64Vector3D(scalar, scalar, scalar);
-        }
-
-
+        
         public int VSpaceDimensions 
             => 3;
+
+        public int Grade 
+            => 1;
 
         public Float64Scalar X 
             => Scalar1;
@@ -416,6 +482,26 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
                 : this / normSquared.Value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Bivector3D Normal3D()
+        {
+            return Float64Bivector3D.Create(
+                Scalar3,
+                -Scalar2,
+                Scalar1
+            );
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Bivector3D Normal3D(Float64Scalar scalingFactor)
+        {
+            return Float64Bivector3D.Create(
+                Scalar3 * scalingFactor,
+                -Scalar2 * scalingFactor,
+                Scalar1 * scalingFactor
+            );
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Float64Bivector3D Dual3D()
         {

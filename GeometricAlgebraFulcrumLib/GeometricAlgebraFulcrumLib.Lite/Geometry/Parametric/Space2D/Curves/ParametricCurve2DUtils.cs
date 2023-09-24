@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Adaptive;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Mapped;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Frames.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.Maps.Space2D;
@@ -120,7 +119,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves
 
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<double> GetParameterValues(this AdaptiveCurve2D curve)
+        public static IEnumerable<Float64Scalar> GetParameterValues(this AdaptiveCurve2D curve)
         {
             return curve.Select(f => f.ParameterValue);
         }

@@ -158,13 +158,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
             MainSceneComposer.GridMaterialKind =
                 GrBabylonJsGridMaterialKind.TexturedMaterial;
 
-            MainSceneComposer.AddXzSquareGrid(
-                new GrVisualXzSquareGrid3D("grid")
+            MainSceneComposer.AddSquareGrid(
+                new GrVisualSquareGrid3D("grid", GrVisualSquareGridPlane3D.ZxPlane)
                 {
-                    UnitCountX = GridUnitCount,
-                    UnitCountZ = GridUnitCount,
+                    UnitCount1 = GridUnitCount,
+                    UnitCount2 = GridUnitCount,
                     UnitSize = 1,
-                    Origin = Float64Vector3D.Create(-0.5d * GridUnitCount, 0, -0.5d * GridUnitCount),
+                    DistanceToOrigin = 0,
                     Opacity = 0.25,
                     BaseSquareColor = Color.LightYellow,
                     BaseLineColor = Color.BurlyWood,

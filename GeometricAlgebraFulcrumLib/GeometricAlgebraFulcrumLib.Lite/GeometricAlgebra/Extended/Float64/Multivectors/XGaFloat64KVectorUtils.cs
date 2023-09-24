@@ -58,6 +58,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
                 _ => throw new InvalidOperationException()
             };
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static XGaFloat64KVector RemoveSmallTerms(this XGaFloat64KVector mv, double epsilon = 1e-12)
+        {
+            return mv switch
+            {
+                XGaFloat64Scalar s => s,
+                XGaFloat64Vector v => v.RemoveSmallTerms(epsilon),
+                XGaFloat64Bivector bv => bv.RemoveSmallTerms(epsilon),
+                XGaFloat64HigherKVector kv => kv.RemoveSmallTerms(epsilon),
+                _ => throw new InvalidOperationException()
+            };
+        }
 
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

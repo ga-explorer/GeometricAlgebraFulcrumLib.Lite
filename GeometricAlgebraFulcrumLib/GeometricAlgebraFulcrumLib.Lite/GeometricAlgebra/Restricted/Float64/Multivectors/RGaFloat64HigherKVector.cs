@@ -7,6 +7,7 @@ using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multivectors.Composers;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Processors;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multivectors
 {
@@ -121,6 +122,24 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         {
             return Processor.CreateZeroVector();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<double, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, double, bool> filterFunc)
+        {
+            return Processor.CreateZeroVector();
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Bivector GetBivectorPart()
@@ -174,6 +193,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
 
             return Processor.CreateHigherKVector(Grade, idScalarDictionary);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public RGaFloat64HigherKVector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
+        }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -185,9 +217,6 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override double GetBasisBladeScalar(ulong basisBlade)
         {
-            if (basisBlade.Grade() != Grade)
-                throw new IndexOutOfRangeException(nameof(basisBlade));
-
             return _idScalarDictionary.TryGetValue(basisBlade, out var scalar)
                 ? scalar
                 : 0d;

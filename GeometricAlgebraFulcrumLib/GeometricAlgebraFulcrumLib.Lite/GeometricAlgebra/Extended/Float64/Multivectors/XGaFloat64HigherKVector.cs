@@ -7,6 +7,7 @@ using DataStructuresLib.IndexSets;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Multivectors.Composers;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Processors;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Multivectors
 {
@@ -175,6 +176,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
             return Processor.CreateHigherKVector(Grade, idScalarDictionary);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public XGaFloat64HigherKVector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override double Scalar()
@@ -185,9 +199,6 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override double GetBasisBladeScalar(IIndexSet basisBlade)
         {
-            if (basisBlade.Count != Grade)
-                throw new IndexOutOfRangeException(nameof(basisBlade));
-
             return _idScalarDictionary.TryGetValue(basisBlade, out var scalar)
                 ? scalar
                 : 0d;

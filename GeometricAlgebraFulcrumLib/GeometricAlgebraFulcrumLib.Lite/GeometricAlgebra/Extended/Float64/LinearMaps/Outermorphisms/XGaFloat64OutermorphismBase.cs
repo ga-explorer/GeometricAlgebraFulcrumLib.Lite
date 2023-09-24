@@ -52,8 +52,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Line
         
         public abstract XGaFloat64HigherKVector OmMap(XGaFloat64HigherKVector kVector);
         
-        public abstract XGaFloat64KVector OmMap(XGaFloat64KVector kVector);
-        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public XGaFloat64KVector OmMap(XGaFloat64KVector kVector)
+        {
+            return kVector switch
+            {
+                XGaFloat64Scalar s => s,
+                XGaFloat64Vector v => OmMap(v),
+                XGaFloat64Bivector bv => OmMap(bv),
+                XGaFloat64HigherKVector kv => OmMap(kv),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
         public abstract XGaFloat64Multivector OmMap(XGaFloat64Multivector multivector);
         
         public abstract IEnumerable<KeyValuePair<IIndexSet, XGaFloat64Vector>> GetOmMappedBasisVectors(int vSpaceDimensions);

@@ -3,10 +3,9 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Adaptive;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Samplers;
 
@@ -15,7 +14,7 @@ public class AdaptiveCurveSampler3D :
 {
     public IParametricCurve3D Curve { get; private set; }
 
-    public Float64Range1D ParameterRange { get; private set; }
+    public Float64ScalarRange ParameterRange { get; private set; }
 
     public bool IsPeriodic { get; private set; }
 
@@ -45,7 +44,7 @@ public class AdaptiveCurveSampler3D :
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public AdaptiveCurveSampler3D(IParametricCurve3D curve, Float64Range1D parameterRange, AdaptiveCurveSamplingOptions3D samplingOptions, bool isPeriodic = false)
+    public AdaptiveCurveSampler3D(IParametricCurve3D curve, Float64ScalarRange parameterRange, AdaptiveCurveSamplingOptions3D samplingOptions, bool isPeriodic = false)
     {
         SamplingOptions = samplingOptions;
         IsPeriodic = isPeriodic;
@@ -67,7 +66,7 @@ public class AdaptiveCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public AdaptiveCurveSampler3D SetCurve(IParametricCurve3D curve, Float64Range1D parameterRange, AdaptiveCurveSamplingOptions3D samplingOptions, bool isPeriodic)
+    public AdaptiveCurveSampler3D SetCurve(IParametricCurve3D curve, Float64ScalarRange parameterRange, AdaptiveCurveSamplingOptions3D samplingOptions, bool isPeriodic)
     {
         Curve = curve;
         ParameterRange = parameterRange;
@@ -81,13 +80,13 @@ public class AdaptiveCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetParameterValues()
+    public IEnumerable<Float64Scalar> GetParameterValues()
     {
         return SampledCurve.GetParameterValues();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<Float64Range1D> GetParameterSections()
+    public IEnumerable<Float64ScalarRange> GetParameterSections()
     {
         var tValues = SampledCurve.GetParameterValues().ToImmutableArray();
 
@@ -96,7 +95,7 @@ public class AdaptiveCurveSampler3D :
         {
             var t2 = tValues[i];
 
-            yield return Float64Range1D.Create(t1, t2);
+            yield return Float64ScalarRange.Create(t1, t2);
 
             t1 = t2;
         }

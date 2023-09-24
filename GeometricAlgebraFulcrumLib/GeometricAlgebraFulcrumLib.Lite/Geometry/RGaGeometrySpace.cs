@@ -173,20 +173,7 @@ public abstract class RGaGeometrySpace
         return latexText.Trim();
     }
     
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public RGaFloat64Scalar EncodeScalar(double s)
-    {
-        return Processor.CreateScalar(s);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public double DecodeScalar(RGaFloat64Scalar scalar)
-    {
-        return scalar.Scalar();
-    }
-
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Scalar ReflectOn(RGaFloat64Scalar mv, RGaFloat64KVector subspace)
     {
@@ -388,54 +375,96 @@ public abstract class RGaGeometrySpace
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Scalar Project(RGaFloat64Scalar blade, RGaFloat64KVector subspace)
     {
-        return blade
-            .Fdp(subspace)
-            .Gp(subspace)
-            .GetScalarPart();
+        var projectedBlade = 
+            blade
+                .Fdp(subspace)
+                .Gp(subspace)
+                .GetScalarPart();
+
+        var scalarFactor = subspace.SpSquared();
+
+        return scalarFactor.IsNearZero() 
+            ? projectedBlade 
+            : projectedBlade / scalarFactor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Vector Project(RGaFloat64Vector blade, RGaFloat64KVector subspace)
     {
-        return blade
-            .Fdp(subspace)
-            .Gp(subspace)
-            .GetVectorPart();
+        var projectedBlade = 
+            blade
+                .Fdp(subspace)
+                .Gp(subspace)
+                .GetVectorPart();
+
+        var scalarFactor = subspace.SpSquared();
+
+        return scalarFactor.IsNearZero() 
+            ? projectedBlade 
+            : projectedBlade / scalarFactor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Bivector Project(RGaFloat64Bivector blade, RGaFloat64KVector subspace)
     {
-        return blade
-            .Fdp(subspace)
-            .Gp(subspace)
-            .GetBivectorPart();
+        var projectedBlade = 
+            blade
+                .Fdp(subspace)
+                .Gp(subspace)
+                .GetBivectorPart();
+
+        var scalarFactor = subspace.SpSquared();
+
+        return scalarFactor.IsNearZero() 
+            ? projectedBlade 
+            : projectedBlade / scalarFactor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64HigherKVector Project(RGaFloat64HigherKVector blade, RGaFloat64KVector subspace)
     {
-        return blade
-            .Fdp(subspace)
-            .Gp(subspace)
-            .GetHigherKVectorPart(blade.Grade);
+        var projectedBlade = 
+            blade
+                .Fdp(subspace)
+                .Gp(subspace)
+                .GetHigherKVectorPart(blade.Grade);
+
+        var scalarFactor = subspace.SpSquared();
+
+        return scalarFactor.IsNearZero() 
+            ? projectedBlade 
+            : projectedBlade / scalarFactor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64KVector Project(RGaFloat64KVector blade, RGaFloat64KVector subspace)
     {
-        return blade
-            .Fdp(subspace)
-            .Gp(subspace)
-            .GetKVectorPart(blade.Grade);
+        var projectedBlade = 
+            blade
+                .Fdp(subspace)
+                .Gp(subspace)
+                .GetKVectorPart(blade.Grade);
+
+        var scalarFactor = subspace.SpSquared();
+
+        return scalarFactor.IsNearZero() 
+            ? projectedBlade 
+            : projectedBlade / scalarFactor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Multivector Project(RGaFloat64Multivector blade, RGaFloat64KVector subspace)
     {
-        return blade
-            .Fdp(subspace)
-            .Gp(subspace);
+        var projectedBlade = 
+            blade
+                .Fdp(subspace)
+                .Gp(subspace);
+
+        var scalarFactor = subspace.SpSquared();
+
+        return scalarFactor.IsNearZero() 
+            ? projectedBlade 
+            : projectedBlade / scalarFactor;
     }
 
 }

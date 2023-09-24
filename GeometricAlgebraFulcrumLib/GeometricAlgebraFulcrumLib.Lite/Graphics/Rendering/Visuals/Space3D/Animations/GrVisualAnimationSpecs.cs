@@ -1,61 +1,83 @@
 ﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
+using System.Runtime.CompilerServices;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 
-public sealed class GrVisualAnimationSpecs
+public sealed record GrVisualAnimationSpecs :
+    IGeometricElement,
+    IEquatable<GrVisualAnimationSpecs>
 {
     public static GrVisualAnimationSpecs Static { get; }
         = new GrVisualAnimationSpecs();
     
-    public static GrVisualAnimationSpecs Create(int frameRate, Float64Range1D timeRange)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GrVisualAnimationSpecs Create(int frameRate, Float64ScalarRange timeRange)
     {
         return new GrVisualAnimationSpecs(frameRate, timeRange);
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static GrVisualAnimationSpecs Create(int frameRate, double maxTime)
     {
-        return new GrVisualAnimationSpecs(frameRate, Float64Range1D.Create(maxTime));
+        return new GrVisualAnimationSpecs(frameRate, Float64ScalarRange.Create(maxTime));
     }
 
 
-    public Float64Range1D TimeRange { get; }
+    public Float64ScalarRange FrameTimeRange { get; }
 
-    public Int32Range1D FrameRange { get; }
+    public Int32Range1D FrameIndexRange { get; }
 
     public int FrameRate { get; }
+    
+    public int FrameCount 
+        => FrameIndexRange.Count;
+
+    public double FrameTime 
+        => 1d / FrameRate;
 
     public bool IsStatic 
         => FrameRate < 1;
+    
+    public bool IsAnimated 
+        => FrameRate >= 1;
 
-    public double MinTime 
-        => TimeRange.MinValue;
+    public double MinFrameTime 
+        => FrameTimeRange.MinValue;
 
-    public double MaxTime 
-        => TimeRange.MaxValue;
+    public double MaxFrameTime 
+        => FrameTimeRange.MaxValue;
     
     public int MinFrameIndex 
-        => FrameRange.MinValue;
+        => FrameIndexRange.MinValue;
     
     public int MaxFrameIndex 
-        => FrameRange.MaxValue;
+        => FrameIndexRange.MaxValue;
+    
+    public IEnumerable<double> FrameTimes
+        => FrameIndexRange.Select(frameIndex => frameIndex * FrameTime);
+    
+    public IEnumerable<int> FrameIndices
+        => FrameIndexRange;
 
     public IEnumerable<KeyValuePair<int, double>> FrameIndexTimePairs
-        => FrameRange.Select(frameIndex => 
+        => FrameIndexRange.Select(frameIndex => 
             new KeyValuePair<int, double>(
                 frameIndex,
                 frameIndex / (double) FrameRate
             )
         );
+    
 
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private GrVisualAnimationSpecs()
     {
         FrameRate = 0;
-        TimeRange = Float64Range1D.ZeroToOne;
-        FrameRange = Int32Range1D.ZeroToOne;
+        FrameTimeRange = Float64ScalarRange.ZeroToOne;
+        FrameIndexRange = Int32Range1D.ZeroToOne;
     }
 
-    private GrVisualAnimationSpecs(int frameRate, Float64Range1D timeRange) 
+    private GrVisualAnimationSpecs(int frameRate, Float64ScalarRange timeRange) 
     {
         if (!timeRange.IsValid() || timeRange.MinValue < 0)
             throw new InvalidOperationException();
@@ -69,14 +91,68 @@ public sealed class GrVisualAnimationSpecs
         if (frameIndex1 == frameIndex2)
             throw new InvalidOperationException();
 
-        //TODO: Test alignment of time range with frame range
-        //TimeRange = Float64Range1D.Create(
-        //    frameIndex1 / (double) frameRate,
-        //    frameIndex2 / (double) frameRate
-        //);
-
         FrameRate = frameRate;
-        TimeRange = timeRange;
-        FrameRange = Int32Range1D.Create(frameIndex1, frameIndex2);
+        FrameIndexRange = Int32Range1D.Create(frameIndex1, frameIndex2);
+
+        //TODO: Test alignment of time range with frame range
+        //FrameTimeRange = timeRange;
+        FrameTimeRange = Float64ScalarRange.Create(
+            frameIndex1 / (double)frameRate,
+            frameIndex2 / (double)frameRate
+        );
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool IsValid()
+    {
+        return true;
+    }
+
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public IEnumerable<KeyValuePair<int, T>> GetFrameIndexValuePairs<T>(Func<double, T> timeToValueMapping)
+    {
+        return FrameIndexTimePairs.Select(
+            indexTimePair => new KeyValuePair<int, T>(
+                indexTimePair.Key,
+                timeToValueMapping(indexTimePair.Value)
+            )
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public IEnumerable<KeyValuePair<double, T>> GetFrameTimeValuePairs<T>(Func<double, T> timeToValueMapping)
+    {
+        return FrameTimes.Select(
+            time => new KeyValuePair<double, T>(
+                time,
+                timeToValueMapping(time)
+            )
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public IEnumerable<Tuple<int, double, T>> GetFrameIndexTimeValueTuples<T>(Func<double, T> timeToValueMapping)
+    {
+        return FrameIndexTimePairs.Select(
+            indexTimePair => new Tuple<int, double, T>(
+                indexTimePair.Key,
+                indexTimePair.Value,
+                timeToValueMapping(indexTimePair.Value)
+            )
+        );
+    }
+
+    public bool Equals(GrVisualAnimationSpecs? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return FrameIndexRange.Equals(other.FrameIndexRange) && FrameRate == other.FrameRate;
+    }
+    
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(FrameIndexRange, FrameRate);
     }
 }

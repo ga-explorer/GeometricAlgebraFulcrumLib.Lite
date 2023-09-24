@@ -121,6 +121,45 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         {
             return this;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc)
+        {
+            if (IsZero) return this;
+
+            var idScalarDictionary = 
+                _idScalarDictionary.Where(term => 
+                    filterFunc(term.Key.FirstOneBitPosition())
+                ).ToDictionary();
+
+            return Processor.CreateVector(idScalarDictionary);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<double, bool> filterFunc)
+        {
+            if (IsZero) return this;
+
+            var idScalarDictionary = 
+                _idScalarDictionary.Where(term => 
+                    filterFunc(term.Value)
+                ).ToDictionary();
+
+            return Processor.CreateVector(idScalarDictionary);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override RGaFloat64Vector GetVectorPart(Func<int, double, bool> filterFunc)
+        {
+            if (IsZero) return this;
+
+            var idScalarDictionary = 
+                _idScalarDictionary.Where(term => 
+                    filterFunc(term.Key.FirstOneBitPosition(), term.Value)
+                ).ToDictionary();
+
+            return Processor.CreateVector(idScalarDictionary);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Bivector GetBivectorPart()
@@ -134,19 +173,6 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
             return Processor.CreateZeroHigherKVector(grade);
         }
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc)
-        {
-            if (IsZero) return this;
-
-            var idScalarDictionary = 
-                _idScalarDictionary.Where(term => 
-                    filterFunc(term.Key.FirstOneBitPosition())
-                ).ToDictionary();
-
-            return Processor.CreateVector(idScalarDictionary);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public RGaFloat64Vector GetPart(Func<ulong, bool> filterFunc)
         {
@@ -185,6 +211,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
 
             return Processor.CreateVector(idScalarDictionary);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public RGaFloat64Vector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
+        }
 
 
         public override IEnumerable<RGaBasisBlade> BasisBlades
@@ -199,8 +238,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override double GetBasisBladeScalar(ulong basisBladeId)
         {
-            return basisBladeId.IsBasisVector() &&
-                   _idScalarDictionary.TryGetValue(basisBladeId, out var scalar)
+            return _idScalarDictionary.TryGetValue(basisBladeId, out var scalar)
                 ? scalar
                 : 0d;
         }

@@ -261,17 +261,37 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra
         {
             return CreateFromDegrees(angle1.Degrees.Value + angle2.Degrees.Value);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64PlanarAngle operator +(Float64PlanarAngle angle1, double angleInRadians2)
         {
-            return CreateFromDegrees(angle1.Degrees.Value + angleInRadians2 * RadianToDegreeFactor);
+            return CreateFromDegrees(
+                angle1.Degrees.Value + angleInRadians2 * RadianToDegreeFactor
+            );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator +(Float64PlanarAngle angle1, Float64Scalar angleInRadians2)
+        {
+            return CreateFromDegrees(
+                angle1.Degrees.Value + angleInRadians2.Value * RadianToDegreeFactor
+            );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64PlanarAngle operator +(double angleInRadians1, Float64PlanarAngle angle2)
         {
-            return CreateFromDegrees(angleInRadians1 * RadianToDegreeFactor + angle2.Degrees.Value);
+            return CreateFromDegrees(
+                angleInRadians1 * RadianToDegreeFactor + angle2.Degrees.Value
+            );
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator +(Float64Scalar angleInRadians1, Float64PlanarAngle angle2)
+        {
+            return CreateFromDegrees(
+                angleInRadians1.Value * RadianToDegreeFactor + angle2.Degrees.Value
+            );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -285,11 +305,33 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra
         {
             return CreateFromDegrees(angle1.Degrees.Value - angleInRadians2 * RadianToDegreeFactor);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator -(Float64PlanarAngle angle1, Float64Scalar angleInRadians2)
+        {
+            return CreateFromDegrees(
+                angle1.Degrees.Value - angleInRadians2.Value * RadianToDegreeFactor
+            );
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64PlanarAngle operator -(double angleInRadians1, Float64PlanarAngle angle2)
         {
             return CreateFromDegrees(angleInRadians1 * RadianToDegreeFactor - angle2.Degrees.Value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator -(Float64Scalar angleInRadians1, Float64PlanarAngle angle2)
+        {
+            return CreateFromDegrees(
+                angleInRadians1.Value * RadianToDegreeFactor - angle2.Degrees.Value
+            );
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator *(Float64PlanarAngle angle, int number)
+        {
+            return CreateFromDegrees(angle.Degrees.Value * number);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -297,17 +339,47 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra
         {
             return CreateFromDegrees(angle.Degrees.Value * number);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator *(Float64PlanarAngle angle, Float64Scalar number)
+        {
+            return CreateFromDegrees(angle.Degrees.Value * number.Value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator *(int number, Float64PlanarAngle angle)
+        {
+            return CreateFromDegrees(number * angle.Degrees.Value);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64PlanarAngle operator *(double number, Float64PlanarAngle angle)
         {
             return CreateFromDegrees(number * angle.Degrees.Value);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator *(Float64Scalar number, Float64PlanarAngle angle)
+        {
+            return CreateFromDegrees(number.Value * angle.Degrees.Value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator /(Float64PlanarAngle angle, int number)
+        {
+            return CreateFromDegrees(angle.Degrees.Value / number);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64PlanarAngle operator /(Float64PlanarAngle angle, double number)
         {
             return CreateFromDegrees(angle.Degrees.Value / number);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64PlanarAngle operator /(Float64PlanarAngle angle, Float64Scalar number)
+        {
+            return CreateFromDegrees(angle.Degrees.Value / number.Value);
         }
 
 

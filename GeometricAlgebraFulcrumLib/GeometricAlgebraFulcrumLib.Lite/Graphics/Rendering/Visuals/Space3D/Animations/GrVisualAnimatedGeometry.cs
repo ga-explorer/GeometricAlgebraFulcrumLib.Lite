@@ -1,60 +1,76 @@
-﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
+﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Animations;
 
 public abstract class GrVisualAnimatedGeometry :
     IGeometricElement
 {
-    public abstract Float64Range1D TimeRange { get; }
-    
-    public double MinTime 
-        => TimeRange.MinValue;
+    public GrVisualAnimationSpecs AnimationSpecs { get; }
 
-    public double MaxTime 
-        => TimeRange.MaxValue;
+    //public IReadOnlyList<int> InvalidFrameIndexList { get; private set; }
+    //    = ImmutableArray<int>.Empty;
+
+    public Float64ScalarRange FrameTimeRange 
+        => AnimationSpecs.FrameTimeRange;
     
+    public Int32Range1D FrameIndexRange 
+        => AnimationSpecs.FrameIndexRange;
+
+    public int FrameRate 
+        => AnimationSpecs.FrameRate;
+    
+    public double FrameTime
+        => AnimationSpecs.FrameTime;
+
+    public double MinFrameTime 
+        => AnimationSpecs.MinFrameTime;
+
+    public double MaxFrameTime 
+        => AnimationSpecs.MaxFrameTime;
+    
+    public int MinFrameIndex 
+        => AnimationSpecs.MinFrameIndex;
+    
+    public int MaxFrameIndex 
+        => AnimationSpecs.MaxFrameIndex;
+
+    public IEnumerable<KeyValuePair<int, double>> FrameIndexTimePairs
+        => AnimationSpecs.FrameIndexTimePairs;
+
+    
+    protected GrVisualAnimatedGeometry(GrVisualAnimationSpecs animationSpecs)
+    {
+        if (animationSpecs.IsStatic)
+            throw new InvalidOperationException();
+
+        AnimationSpecs = animationSpecs;
+
+        //SetInvalidFrameIndices(invalidFrameIndices);
+
+        //Debug.Assert(
+        //    InvalidFrameIndexList.Count == 0 ||
+        //    InvalidFrameIndexList.All(animationSpecs.FrameIndexRange.Contains)
+        //);
+    }
+
 
     public abstract bool IsValid();
     
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsValid(Float64Range1D timeRange)
-    {
-        return IsValid() && TimeRange == timeRange;
-    }
+    //public void RemoveInvalidFrameIndices()
+    //{
+    //    InvalidFrameIndexList = ImmutableArray<int>.Empty;
+    //}
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Int32Range1D GetFrameIndexRange(int frameRate)
-    {
-        if (frameRate < 1)
-            throw new ArgumentOutOfRangeException(nameof(frameRate));
+    //public void SetInvalidFrameIndices(IReadOnlyList<int> invalidFrameIndexList)
+    //{
+    //    if (invalidFrameIndexList.Count == 0)
+    //        InvalidFrameIndexList = ImmutableArray<int>.Empty;
 
-        return Int32Range1D.Create(
-            (int) Math.Ceiling(TimeRange.MinValue * frameRate),
-            (int) Math.Floor(TimeRange.MaxValue * frameRate)
-        );
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetKeyFrameTimes(int frameRate)
-    {
-        var frameTime = 1d / frameRate;
+    //    else if (invalidFrameIndexList.All(AnimationSpecs.FrameIndexRange.Contains))
+    //        InvalidFrameIndexList = invalidFrameIndexList;
 
-        return GetFrameIndexRange(frameRate)
-            .Select(
-                frameIndex => frameIndex * frameTime
-            );
-    }
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<KeyValuePair<int, double>> GetKeyFrameIndexTimePairs(int frameRate)
-    {
-        var frameTime = 1d / frameRate;
-
-        return GetFrameIndexRange(frameRate)
-            .Select(frameIndex => new KeyValuePair<int, double>(
-                frameIndex, 
-                frameIndex * frameTime
-            ));
-    }
+    //    else
+    //        throw new InvalidOperationException();
+    //}
 }

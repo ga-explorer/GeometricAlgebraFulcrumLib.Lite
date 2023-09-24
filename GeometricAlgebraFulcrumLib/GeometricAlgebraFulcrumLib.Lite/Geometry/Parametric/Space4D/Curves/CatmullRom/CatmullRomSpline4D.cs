@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space1D.Curves.CatmullRom;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space1D.Scalars.CatmullRom;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space4D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using MathNet.Numerics;

@@ -136,7 +136,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
 
         public Line3D Line { get; private set; }
 
-        public Float64Range1D LineParameterLimits { get; private set; }
+        public Float64ScalarRange LineParameterLimits { get; private set; }
 
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
                 lineSegment.Point2Z - lineSegment.Point1Z
             );
 
-            LineParameterLimits = Float64Range1D.ZeroToOne;
+            LineParameterLimits = Float64ScalarRange.ZeroToOne;
 
             return this;
         }
@@ -174,12 +174,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
                 point2.Z - point1.Z
             );
 
-            LineParameterLimits = Float64Range1D.ZeroToOne;
+            LineParameterLimits = Float64ScalarRange.ZeroToOne;
 
             return this;
         }
 
-        public GcLimitedLineIntersector3D SetLine(IFloat64Vector3D lineOrigin, IFloat64Vector3D lineDirection, Float64Range1D lineParamLimits)
+        public GcLimitedLineIntersector3D SetLine(IFloat64Vector3D lineOrigin, IFloat64Vector3D lineDirection, Float64ScalarRange lineParamLimits)
         {
             Line = new Line3D(
                 lineOrigin.X,
@@ -195,7 +195,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
             return this;
         }
 
-        public GcLimitedLineIntersector3D SetLine(ILine3D line, Float64Range1D lineParamLimits)
+        public GcLimitedLineIntersector3D SetLine(ILine3D line, Float64ScalarRange lineParamLimits)
         {
             Line = line.ToLine();
 
@@ -1885,7 +1885,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
                     return IntersectionUtils.NoIntersectionPair;
             }
 
-            return Tuple.Create(true, tMin, tMax);
+            return new Tuple<bool, double, double>(true, tMin, tMax);
         }
 
 

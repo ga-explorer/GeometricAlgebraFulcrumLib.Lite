@@ -1,7 +1,7 @@
 ﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Computers;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space3D.Traversal
 {
@@ -13,11 +13,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space3D.Trav
             return new AccBihLineTraverser3D<T>(
                 bih,
                 line,
-                Float64Range1D.Infinite
+                Float64ScalarRange.Infinite
             );
         }
 
-        public static AccBihLineTraverser3D<T> Create(IAccBih3D<T> bih, ILine3D line, Float64Range1D lineParamLimits)
+        public static AccBihLineTraverser3D<T> Create(IAccBih3D<T> bih, ILine3D line, Float64ScalarRange lineParamLimits)
         {
             return new AccBihLineTraverser3D<T>(
                 bih,
@@ -31,7 +31,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space3D.Trav
             return new AccBihLineTraverser3D<T>(
                 bih,
                 line,
-                Float64Range1D.Create(lineParamLimit1, lineParamLimit2)
+                Float64ScalarRange.Create(lineParamLimit1, lineParamLimit2)
             );
         }
 
@@ -46,12 +46,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space3D.Trav
 
         public LineTraversalData3D LineData { get; }
 
-        public Float64Range1D LineParameterRange { get; private set; }
+        public Float64ScalarRange LineParameterRange { get; private set; }
 
         public IEnumerable<AccBihLineTraversalState3D> TraversalStates => _statesList;
 
 
-        private AccBihLineTraverser3D(IAccBih3D<T> bih, ILine3D line, Float64Range1D lineParamLimits)
+        private AccBihLineTraverser3D(IAccBih3D<T> bih, ILine3D line, Float64ScalarRange lineParamLimits)
         {
             Bih = bih;
             Line = line;

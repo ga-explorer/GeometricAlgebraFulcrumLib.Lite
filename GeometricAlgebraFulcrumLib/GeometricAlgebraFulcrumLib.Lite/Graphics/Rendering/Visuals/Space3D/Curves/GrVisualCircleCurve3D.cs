@@ -75,7 +75,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
             );
         }
         
-        public static GrVisualCircleCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D normal, GrVisualAnimatedVector1D radius, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualCircleCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D normal, GrVisualAnimatedScalar radius)
         {
             return new GrVisualCircleCurve3D(
                 name,
@@ -83,12 +83,25 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
                 Float64Vector3D.Zero, 
                 Float64Vector3D.E2, 
                 1d,
-                animationSpecs
+                normal.AnimationSpecs
             ).SetAnimatedNormal(normal)
                 .SetAnimatedRadius(radius);
         }
+        
+        public static GrVisualCircleCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D center, Float64Vector3D normal, GrVisualAnimatedScalar radius)
+        {
+            return new GrVisualCircleCurve3D(
+                    name,
+                    style,
+                    Float64Vector3D.Zero, 
+                    normal, 
+                    1d,
+                    center.AnimationSpecs
+                ).SetAnimatedCenter(center)
+                .SetAnimatedRadius(radius);
+        }
 
-        public static GrVisualCircleCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D center, GrVisualAnimatedVector3D normal, GrVisualAnimatedVector1D radius, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualCircleCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVector3D center, GrVisualAnimatedVector3D normal, GrVisualAnimatedScalar radius)
         {
             return new GrVisualCircleCurve3D(
                 name,
@@ -96,7 +109,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
                 Float64Vector3D.Zero, 
                 Float64Vector3D.E2, 
                 1d,
-                animationSpecs
+                center.AnimationSpecs
             ).SetAnimatedCenter(center)
                 .SetAnimatedNormal(normal)
                 .SetAnimatedRadius(radius);
@@ -119,7 +132,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
 
         public GrVisualAnimatedVector3D? AnimatedNormal { get; set; }
 
-        public GrVisualAnimatedVector1D? AnimatedRadius { get; set; }
+        public GrVisualAnimatedScalar? AnimatedRadius { get; set; }
         
         
         private GrVisualCircleCurve3D(string name, GrVisualCurveStyle3D style, IFloat64Vector3D center, IFloat64Vector3D normal, double radius, GrVisualAnimationSpecs animationSpecs) 
@@ -140,9 +153,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
                    Normal.IsNearUnitVector() &&
                    Radius.IsValid() &&
                    Radius > 0 &&
-                   GetAnimatedGeometries().All(g => 
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
 
         public Triplet<Float64Vector3D> GetPointsTriplet()
@@ -218,7 +229,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
             return new ArrayPointsPath3D(points);
         }
 
-        public GrVisualCircleCurve3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualCircleCurve3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
             
@@ -239,7 +250,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
             return this;
         }
         
-        public GrVisualCircleCurve3D SetAnimatedRadius(GrVisualAnimatedVector1D radius)
+        public GrVisualCircleCurve3D SetAnimatedRadius(GrVisualAnimatedScalar radius)
         {
             AnimatedRadius = radius;
             
@@ -264,14 +275,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
         {
             return AnimationSpecs.IsStatic || AnimatedRadius is null
                 ? Radius
-                : AnimatedRadius.GetPoint(time);
+                : AnimatedRadius.GetValue(time);
         }
         
         public IEnumerable<KeyFrameRecord> GetKeyFrameRecords()
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

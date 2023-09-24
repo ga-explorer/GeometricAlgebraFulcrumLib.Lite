@@ -1,6 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.Maps.Space2D;
@@ -18,7 +16,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Rou
 
         public Float64Vector2D GeneratorPoint { get; }
         
-        public Float64Range1D ParameterRange { get; }
+        public Float64ScalarRange ParameterRange { get; }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -27,7 +25,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Rou
             FixedCurve = fixedCurve;
             MovingCurve = movingCurve;
             GeneratorPoint = movingCurve.GetPoint(movingCurve.ParameterRange.MinValue);
-            ParameterRange = Float64Range1D.Create(0, parameterValueMax);
+            ParameterRange = Float64ScalarRange.Create(0, parameterValueMax);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,7 +34,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Rou
             FixedCurve = fixedCurve;
             MovingCurve = movingCurve;
             GeneratorPoint = generatorPoint.ToVector2D();
-            ParameterRange = Float64Range1D.Create(0, parameterValueMax);
+            ParameterRange = Float64ScalarRange.Create(0, parameterValueMax);
         }
 
 

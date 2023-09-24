@@ -595,6 +595,18 @@ namespace GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra
         {
             return Math.Sqrt(number);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double SqrtOfInverse(this double number)
+        {
+            return Math.Sqrt(1d / number);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double InverseOfSqrt(this double number)
+        {
+            return 1d /  Math.Sqrt(number);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Cbrt(this double number)

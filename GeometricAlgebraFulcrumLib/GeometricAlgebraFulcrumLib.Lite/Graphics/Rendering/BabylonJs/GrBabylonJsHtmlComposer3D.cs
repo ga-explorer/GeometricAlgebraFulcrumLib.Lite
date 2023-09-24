@@ -217,7 +217,7 @@ window.addEventListener(""resize"", function () {
     <head>
         <meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"" />
 
-        <title>Babylon.js sample code</title>
+        <title>!#page-title#!</title>
         
         !#js-lib-code#!
 	    
@@ -278,7 +278,9 @@ window.addEventListener(""resize"", function () {
         public int CanvasWidth { get; set; } = 1280;
 
         public int CanvasHeight { get; set; } = 720;
-        
+
+        public string HtmlPageTitle { get; set; } = "Babylon.js Scene";
+
         public double LaTeXScalingFactor { get; set; }
             = 1 / 75d;
 
@@ -527,6 +529,7 @@ canvas.height = {CanvasHeight};
             return HtmlCodeComposer.GenerateText(
                 new Dictionary<string, string>
                 {
+                    {"page-title", HtmlPageTitle},
                     {"js-lib-code", jsLibCode},
                     {"css-renderCanvas-code", renderCanvasCode},
                     {"css-textDiv-code", textDivCode},

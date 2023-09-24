@@ -40,13 +40,13 @@ public sealed class GrVisualPointMeshSurface3D :
         );
     }
 
-    public static GrVisualPointMeshSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVectorMesh3D positionMesh, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualPointMeshSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVectorMesh3D positionMesh)
     {
         return new GrVisualPointMeshSurface3D(
             name,
             style,
-            positionMesh.GetPointsMesh(animationSpecs.MinTime),
-            animationSpecs
+            positionMesh.GetPointsMesh(positionMesh.AnimationSpecs.MinFrameTime),
+            positionMesh.AnimationSpecs
         ).SetAnimatedPositionMesh(positionMesh);
     }
 
@@ -68,10 +68,10 @@ public sealed class GrVisualPointMeshSurface3D :
     public override bool IsValid()
     {
         return PositionMesh.IsValid() &&
-               AnimatedPositionMesh.IsNullOrValid(AnimationSpecs.TimeRange);
+               AnimatedPositionMesh.IsNullOrValid(AnimationSpecs.FrameTimeRange);
     }
     
-    public GrVisualPointMeshSurface3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+    public GrVisualPointMeshSurface3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
     {
         AnimatedVisibility = visibility;
 
@@ -109,7 +109,7 @@ public sealed class GrVisualPointMeshSurface3D :
     {
         Debug.Assert(IsValid());
 
-        foreach (var frameIndex in KeyFrameRange)
+        foreach (var frameIndex in GetValidFrameIndexSet())
         {
             var time = (double)frameIndex / AnimationSpecs.FrameRate;
             

@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
 using DataStructuresLib.Extensions;
 using DataStructuresLib.Sequences.Periodic1D;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Meshes.PointsPath;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Meshes.PointsPath.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
@@ -16,17 +15,23 @@ public class GrVisualAnimatedVectorPath3D :
     IPeriodicSequence1D<GrVisualAnimatedVector3D>
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static GrVisualAnimatedVectorPath3D Create(Float64Range1D timeRange, int count)
+    public static GrVisualAnimatedVectorPath3D Create(GrVisualAnimationSpecs animationSpecs, int count)
     {
-        return new GrVisualAnimatedVectorPath3D(timeRange, count);
+        return new GrVisualAnimatedVectorPath3D(
+            animationSpecs, 
+            count
+        );
     }
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static GrVisualAnimatedVectorPath3D Create(Float64Range1D timeRange, GrVisualAnimatedVector3D[] dataArray)
+    public static GrVisualAnimatedVectorPath3D Create(GrVisualAnimationSpecs animationSpecs, GrVisualAnimatedVector3D[] dataArray)
     {
-        return new GrVisualAnimatedVectorPath3D(timeRange, dataArray);
+        return new GrVisualAnimatedVectorPath3D(
+            animationSpecs, 
+            dataArray
+        );
     }
-
+    
 
     private readonly GrVisualAnimatedVector3D[] _dataArray;
 
@@ -39,7 +44,7 @@ public class GrVisualAnimatedVectorPath3D :
         get => _dataArray[index.Mod(Count)];
         set
         {
-            if (value.TimeRange != TimeRange || !value.IsValid())
+            if (value.FrameTimeRange != FrameTimeRange || !value.IsValid())
                 throw new InvalidOperationException();
 
             _dataArray[index.Mod(Count)] = value;
@@ -52,34 +57,25 @@ public class GrVisualAnimatedVectorPath3D :
     public bool IsOperator
         => false;
     
-    public override Float64Range1D TimeRange { get; }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private GrVisualAnimatedVectorPath3D(Float64Range1D timeRange, int count)
+    private GrVisualAnimatedVectorPath3D(GrVisualAnimationSpecs animationSpecs, int count)
+        : base(animationSpecs)
     {
-        Debug.Assert(
-            timeRange.IsValid() &&
-            timeRange.MinValue >= 0
-        );
-
-        TimeRange = timeRange;
         _dataArray = new GrVisualAnimatedVector3D[count];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private GrVisualAnimatedVectorPath3D(Float64Range1D timeRange, GrVisualAnimatedVector3D[] dataArray)
+    private GrVisualAnimatedVectorPath3D(GrVisualAnimationSpecs animationSpecs, GrVisualAnimatedVector3D[] dataArray)
+        : base(animationSpecs)
     {
         Debug.Assert(
-            timeRange.IsValid() &&
-            timeRange.MinValue >= 0 &&
-            dataArray.All(p => 
+           dataArray.All(p => 
                 p.IsValid() && 
-                p.TimeRange == timeRange
+                p.AnimationSpecs == animationSpecs
             )
         );
 
-        TimeRange = timeRange;
         _dataArray = dataArray;
     }
 
@@ -87,11 +83,11 @@ public class GrVisualAnimatedVectorPath3D :
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool IsValid()
     {
-        return TimeRange.IsValid() &&
-               TimeRange.MinValue >= 0 &&
+        return FrameTimeRange.IsValid() &&
+               FrameTimeRange.MinValue >= 0 &&
                _dataArray.All(p => 
                    p.IsValid() && 
-                   p.TimeRange == TimeRange
+                   p.FrameTimeRange == FrameTimeRange
                );
     }
     

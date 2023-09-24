@@ -52,6 +52,9 @@ public readonly struct Float64Scalar :
     public static Float64Scalar Pi { get; } 
         = new Float64Scalar(double.Pi);
     
+    public static Float64Scalar TwoPi { get; } 
+        = new Float64Scalar(2d * double.Pi);
+
     public static Float64Scalar Tau { get; } 
         = new Float64Scalar(double.Tau);
     
@@ -1759,6 +1762,18 @@ public readonly struct Float64Scalar :
         return this;
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Float64Scalar ClampPeriodic(double upperLimit)
+    {
+        return Value.ClampPeriodic(upperLimit);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Float64Scalar ClampPeriodic(double lowerLimit, double upperLimit)
+    {
+        return Value.ClampPeriodic(lowerLimit, upperLimit);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Float64Scalar ClampToUnit()
     {

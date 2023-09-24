@@ -105,13 +105,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Line
         {
             return Vector.Gp(kVector.GradeInvolution()).Gp(VectorInverse).GetHigherKVectorPart(kVector.Grade);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override XGaFloat64KVector OmMap(XGaFloat64KVector mv)
-        {
-            return Vector.Gp(mv.GradeInvolution()).Gp(VectorInverse).GetKVectorPart(mv.Grade);
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override XGaFloat64Multivector OmMap(XGaFloat64Multivector mv)
         {

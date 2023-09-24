@@ -2,9 +2,8 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Samplers;
 
@@ -13,7 +12,7 @@ public class UniformParameterCurveSampler3D :
 {
     public IParametricCurve3D Curve { get; private set; }
 
-    public Float64Range1D ParameterRange { get; private set; }
+    public Float64ScalarRange ParameterRange { get; private set; }
 
     public bool IsPeriodic { get; private set; }
 
@@ -42,7 +41,7 @@ public class UniformParameterCurveSampler3D :
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public UniformParameterCurveSampler3D(IParametricCurve3D curve, Float64Range1D parameterRange, int count, bool isPeriodic = false)
+    public UniformParameterCurveSampler3D(IParametricCurve3D curve, Float64ScalarRange parameterRange, int count, bool isPeriodic = false)
     {
         if ((isPeriodic && count < 1) || (!isPeriodic && count < 2))
             throw new ArgumentOutOfRangeException(nameof(count));
@@ -68,7 +67,7 @@ public class UniformParameterCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public UniformParameterCurveSampler3D SetCurve(IParametricCurve3D curve, Float64Range1D parameterRange, int count, bool isPeriodic)
+    public UniformParameterCurveSampler3D SetCurve(IParametricCurve3D curve, Float64ScalarRange parameterRange, int count, bool isPeriodic)
     {
         if ((isPeriodic && count < 1) || (!isPeriodic && count < 2))
             throw new ArgumentOutOfRangeException(nameof(count));
@@ -87,7 +86,7 @@ public class UniformParameterCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetParameterValues()
+    public IEnumerable<Float64Scalar> GetParameterValues()
     {
         return Enumerable
             .Range(0, Count)
@@ -97,12 +96,12 @@ public class UniformParameterCurveSampler3D :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<Float64Range1D> GetParameterSections()
+    public IEnumerable<Float64ScalarRange> GetParameterSections()
     {
         return Enumerable
             .Range(0, Count)
             .Select(i => 
-                Float64Range1D.Create(
+                Float64ScalarRange.Create(
                     ParameterRange.MinValue + i * ParameterSectionLength,
                     ParameterRange.MinValue + (i + 1) * ParameterSectionLength
                 )

@@ -88,15 +88,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Line
         {
             throw new NotImplementedException();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override XGaFloat64KVector OmMap(XGaFloat64KVector mv)
-        {
-            return mv.Grade.IsEven() || IsEven
-                ? Multivector.Gp(mv).Gp(MultivectorInverse).GetKVectorPart(mv.Grade) 
-                : Multivector.Gp(-mv).Gp(MultivectorInverse).GetKVectorPart(mv.Grade);
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override XGaFloat64Multivector OmMap(XGaFloat64Multivector mv)
         {

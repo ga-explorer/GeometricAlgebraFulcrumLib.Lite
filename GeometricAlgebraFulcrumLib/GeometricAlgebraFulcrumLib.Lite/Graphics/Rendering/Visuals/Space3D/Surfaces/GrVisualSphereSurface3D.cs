@@ -64,23 +64,25 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             );
         }
         
-        public static GrVisualSphereSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector1D radius, GrVisualAnimationSpecs animationSpecs) {
+        public static GrVisualSphereSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedScalar radius) 
+        {
             return new GrVisualSphereSurface3D(
                 name,
                 style,
                 Float64Vector3D.Zero, 
                 1d,
-                animationSpecs
+                radius.AnimationSpecs
             ).SetAnimatedRadius(radius);
         }
 
-        public static GrVisualSphereSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D center, GrVisualAnimatedVector1D radius, GrVisualAnimationSpecs animationSpecs) {
+        public static GrVisualSphereSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D center, GrVisualAnimatedScalar radius) 
+        {
             return new GrVisualSphereSurface3D(
                 name,
                 style,
                 Float64Vector3D.Zero, 
                 1d,
-                animationSpecs
+                center.AnimationSpecs
             ).SetAnimatedCenter(center)
                 .SetAnimatedRadius(radius);
         }
@@ -92,7 +94,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
 
         public GrVisualAnimatedVector3D? AnimatedCenter { get; set; }
         
-        public GrVisualAnimatedVector1D? AnimatedRadius { get; set; }
+        public GrVisualAnimatedScalar? AnimatedRadius { get; set; }
 
 
         private GrVisualSphereSurface3D(string name, GrVisualSurfaceStyle3D style, IFloat64Vector3D center, double radius, GrVisualAnimationSpecs animationSpecs) 
@@ -110,12 +112,10 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             return Center.IsValid() &&
                    Radius.IsValid() &&
                    Radius > 0 &&
-                   GetAnimatedGeometries().All(g => 
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
         
-        public GrVisualSphereSurface3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualSphereSurface3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
             
@@ -129,7 +129,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             return this;
         }
         
-        public GrVisualSphereSurface3D SetAnimatedRadius(GrVisualAnimatedVector1D radius)
+        public GrVisualSphereSurface3D SetAnimatedRadius(GrVisualAnimatedScalar radius)
         {
             AnimatedRadius = radius;
             
@@ -163,14 +163,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
         {
             return AnimationSpecs.IsStatic || AnimatedRadius is null
                 ? Radius
-                : AnimatedRadius.GetPoint(time);
+                : AnimatedRadius.GetValue(time);
         }
 
         public IEnumerable<KeyFrameRecord> GetKeyFrameRecords()
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

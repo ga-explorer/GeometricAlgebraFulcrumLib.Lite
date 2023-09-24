@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using System.Runtime.CompilerServices;
 using DataStructuresLib.Basic;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Functions;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Quaternions;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
+using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Quaternions;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Frames.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.LinearMaps.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
@@ -59,8 +57,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
         public int Count 
             => 3;
         
-        public Float64Range1D ParameterRange 
-            => Float64Range1D.Infinite;
+        public Float64ScalarRange ParameterRange 
+            => Float64ScalarRange.Infinite;
 
         public DifferentialFunction Item1 
             => ComponentFunctions.Item1;
@@ -244,7 +242,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
 
             return vDs2 - vDs2.ProjectOnUnitVector(vDs1);
         }
-    
+        
         public Float64Vector3D GetArcLengthDerivative3Point(double t)
         {
             var vDt1 = GetDerivative1Point(t);
@@ -270,26 +268,44 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
 
         public Triplet<IParametricCurve3D> GetComponentCurves()
         {
-            var curve1 = ComputedParametricCurve3D.Create(t => Float64Vector3D.Create(ComponentFunctions.Item1.GetValue(t),
+            var curve1 = ComputedParametricCurve3D.Create(
+                t => Float64Vector3D.Create(
+                    ComponentFunctions.Item1.GetValue(t),
                     0,
-                    0),
-                t => Float64Vector3D.Create(ComponentsDerivative1.Item1.GetValue(t),
+                    0
+                ),
+                t => Float64Vector3D.Create(
+                    ComponentsDerivative1.Item1.GetValue(t),
                     0,
-                    0));
+                    0
+                )
+            );
 
-            var curve2 = ComputedParametricCurve3D.Create(t => Float64Vector3D.Create(0,
+            var curve2 = ComputedParametricCurve3D.Create(
+                t => Float64Vector3D.Create(
+                    0,
                     ComponentFunctions.Item2.GetValue(t),
-                    0),
-                t => Float64Vector3D.Create(0,
+                    0
+                ),
+                t => Float64Vector3D.Create(
+                    0,
                     ComponentsDerivative1.Item2.GetValue(t),
-                    0));
+                    0
+                )
+            );
 
-            var curve3 = ComputedParametricCurve3D.Create(t => Float64Vector3D.Create(0, 
+            var curve3 = ComputedParametricCurve3D.Create(
+                t => Float64Vector3D.Create(
+                    0, 
                     0,
-                    ComponentFunctions.Item3.GetValue(t)),
-                t => Float64Vector3D.Create(0,
+                    ComponentFunctions.Item3.GetValue(t)
+                ),
+                t => Float64Vector3D.Create(
                     0,
-                    ComponentsDerivative1.Item3.GetValue(t)));
+                    0,
+                    ComponentsDerivative1.Item3.GetValue(t)
+                )
+            );
 
             return new Triplet<IParametricCurve3D>(curve1, curve2, curve3);
         }
@@ -311,7 +327,49 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
         {
             return TangentNormFunction.GetDerivative2();
         }
+        
+        public DifferentialCurveFrame3D GetFrenetFrame2Vectors(double parameterValue, bool orthogonalFrame = false)
+        {
+            var origin = GetPoint(parameterValue);
 
+            var vDt1 = GetDerivative1Point(parameterValue);
+            var vDt2 = GetDerivative2Point(parameterValue);
+            
+            var sDt1 = GetTangentNormValue(parameterValue);
+            var sDt2 = vDt1.ESp(vDt2) / sDt1;
+            
+            var vDs1 = vDt1 / sDt1;
+            var vDs2 = (sDt1 * vDt2 - sDt2 * vDt1) / sDt1.Cube();
+            
+            if (vDs2.IsNearZero())
+                return DifferentialCurveFrame3D.Create(
+                    parameterValue,
+                    origin,
+                    vDs1,
+                    vDs1.GetUnitNormalPair()
+                );
+
+            if (!orthogonalFrame)
+                return DifferentialCurveFrame3D.Create(
+                    parameterValue, 
+                    origin, 
+                    vDs1, 
+                    vDs2, 
+                    vDs1.VectorCross(vDs2)
+                );
+        
+            var u1 = vDs1;
+            var u2 = vDs2 - vDs2.ProjectOnVector(u1);
+            
+            return DifferentialCurveFrame3D.Create(
+                parameterValue, 
+                origin, 
+                u1, 
+                u2, 
+                u1.VectorCross(u2)
+            );
+        }
+        
         public DifferentialCurveFrame3D GetFrenetFrame(double parameterValue, bool orthogonalFrame = false)
         {
             var origin = GetPoint(parameterValue);
@@ -327,6 +385,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
             var vDs1 = vDt1 / sDt1;
             var vDs2 = (sDt1 * vDt2 - sDt2 * vDt1) / sDt1.Cube();
             var vDs3 = (sDt1.Square() * vDt3 - 3 * sDt1 * sDt2 * vDt2 + (3 * sDt2.Square() - sDt1 * sDt3) * vDt1) / sDt1.Power(5);
+            
+            if (vDs2.IsNearZero())
+                return DifferentialCurveFrame3D.Create(
+                    parameterValue,
+                    origin,
+                    vDs1,
+                    vDs1.GetUnitNormalPair()
+                );
 
             if (!orthogonalFrame)
                 return DifferentialCurveFrame3D.Create(
@@ -384,11 +450,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
         {
             return ComputedParametricQuaternion.Create(time =>
                 {
-                    var frame = GetFrenetFrame(time);
+                    var frame = GetFrenetFrame2Vectors(time, false);
 
-                    return frame.Direction1.GetOrthogonalizingRotation(
-                        frame.Direction2
-                    ).GetQuaternion();
+                    return frame
+                        .Direction1
+                        .GetOrthogonalizingRotation(frame.Direction2)
+                        .GetQuaternion();
                 }
             );
         }
@@ -477,56 +544,17 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Curves
 
             var vDt1 = GetDerivative1Point(t);
             var vDt2 = GetDerivative2Point(t);
-            //var vDt3 = GetDerivative3(t);
-
+            
             var sDt1 = GetTangentNormValue(t);
             var sDt2 = vDt1.ESp(vDt2) / sDt1;
-            //var sDt3 = (vDt2.VectorDot(vDt2) + vDt1.VectorDot(vDt3) - sDt2.Square()) / sDt1;
-
+            
             var vDs1 = vDt1 / sDt1;
             var vDs2 = (sDt1 * vDt2 - sDt2 * vDt1) / sDt1.Cube();
-            //var vDs3 = (sDt1.Square() * vDt3 - 3 * sDt1 * sDt2 * vDt2 + (3 * sDt2.Square() - sDt1 * sDt3) * vDt1) / sDt1.Power(5);
-
-            //return AffineFrame3D.Create(
-            //    origin, 
-            //    vDs1.ToUnitVector(), 
-            //    vDs2.ToUnitVector(), 
-            //    vDs3.ToUnitVector()
-            //);
-
+            
             var e1 = vDs1;
             var e2 = (vDs2 - vDs2.ProjectOnUnitVector(vDs1)).ToUnitVector();
             var e3 = e1.VectorUnitCross(e2);
-
-            //var vDsMatrix = Matrix.Build.DenseOfArray(
-            //    new [,]
-            //    {
-            //        { vDs1.X, vDs2.X, vDs3.X }, 
-            //        { vDs1.Y, vDs2.Y, vDs3.Y }, 
-            //        { vDs1.Z, vDs2.Z, vDs3.Z }
-            //    }
-            //);
-
-            //var gramSchmidt = vDsMatrix.GramSchmidt();
-            //var eMatrix = gramSchmidt.Q;
-            ////var qDet = eMatrix.Determinant();
-
-            //var e1 = new Tuple3D(eMatrix[0, 0], eMatrix[1, 0], eMatrix[2, 0]);
-            //var e2 = new Tuple3D(eMatrix[0, 1], eMatrix[1, 1], eMatrix[2, 1]);
-            //var e3 = e1.VectorUnitCross(e2);
-
-            //if (eMatrix[2, 2].IsNearZero())
-            //    throw new InvalidOperationException();
-
-            ////if (t == 1.94)
-            ////{
-            ////    Console.WriteLine(vDsMatrix);
-            ////    Console.WriteLine(gramSchmidt.Q);
-            ////    Console.WriteLine(qDet);
-            ////    Console.WriteLine(gramSchmidt.R);
-            ////    Console.WriteLine();
-            ////}
-
+            
             return AffineFrame3D.Create(origin, e1, e2, e3);
         }
     

@@ -1,8 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Mapped
 {
@@ -13,7 +12,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Map
 
         public Func<double, Float64PlanarAngle> AngleFunction { get; }
 
-        public Float64Range1D ParameterRange
+        public Float64ScalarRange ParameterRange
             => BaseCurve.ParameterRange;
         
 
@@ -53,19 +52,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Map
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double GetLength()
+        public Float64Scalar GetLength()
         {
             return BaseCurve.GetLength();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ParameterToLength(double parameterValue)
+        public Float64Scalar ParameterToLength(double parameterValue)
         {
             return BaseCurve.ParameterToLength(parameterValue);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double LengthToParameter(double length)
+        public Float64Scalar LengthToParameter(double length)
         {
             return BaseCurve.LengthToParameter(length);
         }

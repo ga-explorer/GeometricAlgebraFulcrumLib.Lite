@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
@@ -27,8 +25,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Cir
                 ? Float64Vector3D.NegativeE3 
                 : Float64Vector3D.E3;
 
-        public Float64Range1D ParameterRange
-            => Float64Range1D.ZeroToOne;
+        public Float64ScalarRange ParameterRange
+            => Float64ScalarRange.ZeroToOne;
         
 
         public ParametricCircleXy3D(double radius, int rotationCount = 1)
@@ -107,19 +105,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Cir
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double GetLength()
+        public Float64Scalar GetLength()
         {
             return Math.Abs(2d * Math.PI * Radius * RotationCount);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ParameterToLength(double parameterValue)
+        public Float64Scalar ParameterToLength(double parameterValue)
         {
             return parameterValue.ClampPeriodic(1d) * GetLength();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double LengthToParameter(double length)
+        public Float64Scalar LengthToParameter(double length)
         {
             var maxLength = GetLength();
 

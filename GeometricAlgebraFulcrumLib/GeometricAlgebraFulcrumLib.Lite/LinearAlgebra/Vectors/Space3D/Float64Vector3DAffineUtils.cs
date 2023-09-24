@@ -157,7 +157,6 @@ public static class Float64Vector3DAffineUtils
         return vector.ZRotateBy(angle * Math.PI / 180);
     }
     
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Float64Vector3D RotateToUnitVector(this IFloat64Vector3D vector1, IFloat64Vector3D unitVector, Float64PlanarAngle angle)
     {
         Debug.Assert(
@@ -166,13 +165,19 @@ public static class Float64Vector3DAffineUtils
         );
 
         // Create a unit normal to u in the u-v rotational plane
-        var v1 = unitVector.Subtract(vector1.Times(unitVector.ESp(vector1)));
+        var v1Dot2 = unitVector.ESp(vector1);
+
+        var v1 = v1Dot2.Abs().IsNearOne()
+            ? vector1.GetNormal()
+            : unitVector.Subtract(vector1.Times(v1Dot2));
+        
         var v1Length = v1.ENorm();
 
         Debug.Assert(
+            v1.ESp(vector1).IsNearZero() &&
             !v1Length.IsNearZero()
         );
-
+        
         // Compute a rotated version of v in the u-v rotational plane by the given angle
         return vector1
             .Times(angle.Cos())
@@ -368,9 +373,11 @@ public static class Float64Vector3DAffineUtils
     {
         var s = v.X * u.X + v.Y * u.Y + v.Z * u.Z;
 
-        return Float64Vector3D.Create(u.X * s,
+        return Float64Vector3D.Create(
+            u.X * s,
             u.Y * s,
-            u.Z * s);
+            u.Z * s
+        );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -802,7 +809,7 @@ public static class Float64Vector3DAffineUtils
     {
         var oldLength = vector.ENorm();
 
-        if (oldLength.IsAlmostZero())
+        if (oldLength.IsZero())
             return Float64Vector3D.Zero;
 
         var scalingFactor = newLength / oldLength;

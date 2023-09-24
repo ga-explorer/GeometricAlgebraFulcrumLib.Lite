@@ -115,18 +115,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
         {
             throw new InvalidOperationException();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override RGaFloat64KVector OmMap(RGaFloat64KVector mv)
-        {
-            return mv.Grade switch
-            {
-                0 or 2 => GetScalingFactor() * mv,
-                1 => OmMap(mv.Scalar(0), mv.Scalar(1)),
-                _ => throw new InvalidOperationException()
-            };
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Multivector OmMap(RGaFloat64Multivector mv)
         {

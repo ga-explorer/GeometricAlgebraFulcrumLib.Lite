@@ -108,18 +108,7 @@ public sealed class RGaFloat64StoredOutermorphism :
 
         return composer.GetHigherKVector(kVector.Grade);
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override RGaFloat64KVector OmMap(RGaFloat64KVector kVector)
-    {
-        var composer = Processor.CreateComposer();
-
-        foreach (var (id, scalar) in kVector)
-            composer.AddMultivector(OmMapBasisBlade(id), scalar);
-
-        return composer.GetKVector(kVector.Grade);
-    }
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override RGaFloat64Multivector OmMap(RGaFloat64Multivector multivector)
     {

@@ -152,6 +152,59 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
                 new KeyValuePair<ulong, double>(basisBlade, scalar)
             );
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RGaFloat64KVector CreateTermKVector(this RGaFloat64Processor metric, IReadOnlyList<int> basisVectorIndexList)
+        {
+            var id = basisVectorIndexList.BasisVectorIndicesToBasisBladeId();
+            var grade = id.Grade();
+
+            if (grade == 0)
+                return metric.CreateOneScalar();
+
+            var idScalarDictionary =
+                new SingleItemDictionary<ulong, double>(id, 1);
+
+            if (grade == 1)
+                return metric.CreateVector(idScalarDictionary);
+            
+            if (grade == 2)
+                return metric.CreateBivector(idScalarDictionary);
+
+            return new RGaFloat64HigherKVector(
+                metric, 
+                grade, 
+                idScalarDictionary
+            );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RGaFloat64KVector CreateTermKVector(this RGaFloat64Processor metric, IReadOnlyList<int> basisVectorIndexList, double scalar)
+        {
+            var id = basisVectorIndexList.BasisVectorIndicesToBasisBladeId();
+            var grade = id.Grade();
+
+            if (scalar.IsZero())
+                return metric.CreateZeroScalar();
+            
+            if (grade == 0)
+                return metric.CreateScalar(scalar);
+
+            var idScalarDictionary =
+                new SingleItemDictionary<ulong, double>(id, scalar);
+
+            if (grade == 1)
+                return metric.CreateVector(idScalarDictionary);
+            
+            if (grade == 2)
+                return metric.CreateBivector(idScalarDictionary);
+
+            return new RGaFloat64HigherKVector(
+                metric, 
+                grade, 
+                idScalarDictionary
+            );
+        }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

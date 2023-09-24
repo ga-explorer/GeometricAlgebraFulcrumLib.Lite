@@ -29,7 +29,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space2D.Cur
         private GrVisualLineSegment2D(string name, IGrVisualCurveStyle2D style, IFloat64Vector2D position1, IFloat64Vector2D position2) 
             : base(name, style)
         {
-            if (position1.Subtract(position2).IsZeroVector())
+            if (position1.Subtract(position2).IsZero())
                 throw new InvalidOperationException();
 
             Position1 = position1;

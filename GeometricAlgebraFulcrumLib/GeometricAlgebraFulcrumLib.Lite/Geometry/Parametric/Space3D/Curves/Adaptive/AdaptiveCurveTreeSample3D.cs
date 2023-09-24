@@ -1,5 +1,4 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Matrices;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Matrices;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 
 // ReSharper disable CompareOfFloatsByEqualityOperator

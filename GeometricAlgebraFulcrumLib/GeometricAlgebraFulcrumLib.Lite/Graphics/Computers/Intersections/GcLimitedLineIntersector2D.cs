@@ -108,7 +108,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
 
         public Line2D Line { get; private set; }
 
-        public Float64Range1D LineParameterLimits { get; private set; }
+        public Float64ScalarRange LineParameterLimits { get; private set; }
 
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
                 lineSegment.Point2Y - lineSegment.Point1Y
             );
 
-            LineParameterLimits = Float64Range1D.ZeroToOne;
+            LineParameterLimits = Float64ScalarRange.ZeroToOne;
 
             return this;
         }
@@ -142,12 +142,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
                 point2.Y - point1.Y
             );
 
-            LineParameterLimits = Float64Range1D.ZeroToOne;
+            LineParameterLimits = Float64ScalarRange.ZeroToOne;
 
             return this;
         }
 
-        public GcLimitedLineIntersector2D SetLine(IFloat64Vector2D lineOrigin, IFloat64Vector2D lineDirection, Float64Range1D lineParamLimits)
+        public GcLimitedLineIntersector2D SetLine(IFloat64Vector2D lineOrigin, IFloat64Vector2D lineDirection, Float64ScalarRange lineParamLimits)
         {
             Line = new Line2D(
                 lineOrigin.X,
@@ -161,7 +161,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
             return this;
         }
 
-        public GcLimitedLineIntersector2D SetLine(ILine2D line, Float64Range1D lineParamLimits)
+        public GcLimitedLineIntersector2D SetLine(ILine2D line, Float64ScalarRange lineParamLimits)
         {
             Line = line.ToLine();
 
@@ -1121,7 +1121,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers.Intersections
                     return IntersectionUtils.NoIntersectionPair;
             }
 
-            return Tuple.Create(true, tMin, tMax);
+            return new Tuple<bool, double, double>(true, tMin.Value, tMax.Value);
         }
 
 

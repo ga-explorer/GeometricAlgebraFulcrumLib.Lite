@@ -57,36 +57,36 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
             );
         }
         
-        public static GrVisualArrowHead3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D direction, GrVisualAnimationSpecs animationSpecs) 
+        public static GrVisualArrowHead3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D direction) 
         {
             return new GrVisualArrowHead3D(
                 name, 
                 style, 
                 Float64Vector3D.Zero, 
                 Float64Vector3D.E1,
-                animationSpecs
+                direction.AnimationSpecs
             ).SetAnimatedDirection(direction);
         }
 
-        public static GrVisualArrowHead3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, IFloat64Vector3D position, GrVisualAnimatedVector3D direction, GrVisualAnimationSpecs animationSpecs) 
+        public static GrVisualArrowHead3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, IFloat64Vector3D position, GrVisualAnimatedVector3D direction) 
         {
             return new GrVisualArrowHead3D(
                 name, 
                 style, 
                 position, 
                 Float64Vector3D.E1,
-                animationSpecs
+                direction.AnimationSpecs
             ).SetAnimatedDirection(direction);
         }
 
-        public static GrVisualArrowHead3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimatedVector3D direction, GrVisualAnimationSpecs animationSpecs) 
+        public static GrVisualArrowHead3D CreateAnimated(string name, GrVisualCurveTubeStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimatedVector3D direction) 
         {
             return new GrVisualArrowHead3D(
                 name, 
                 style, 
                 Float64Vector3D.Zero, 
                 Float64Vector3D.E1,
-                animationSpecs
+                position.AnimationSpecs
             ).SetAnimatedOriginDirection(position, direction);
         }
 
@@ -144,12 +144,10 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
                    Direction.IsNearUnitVector() &&
                    MaxHeight.IsValid() &&
                    MaxHeight >= 0 &&
-                   GetAnimatedGeometries().All(g => 
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
         
-        public GrVisualArrowHead3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualArrowHead3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
 
@@ -219,7 +217,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

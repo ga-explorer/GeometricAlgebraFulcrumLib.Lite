@@ -480,7 +480,7 @@ namespace #name_space#
         private static ParserOptions JsParserOptions { get; }
             = new ParserOptions()
             {
-                Comment = true,
+                Comments = true,
                 Tokens = true,
                 Tolerant = true,
                 ErrorHandler = new CollectingErrorHandler()
@@ -490,8 +490,8 @@ namespace #name_space#
         private static JObject ParseCodeToJsonTree(string filePath)
         {
             var code = File.ReadAllText(filePath);
-            var parser = new JavaScriptParser(code, JsParserOptions);
-            var program = parser.ParseScript();
+            var parser = new JavaScriptParser(JsParserOptions);
+            var program = parser.ParseScript(code);
             var jsonString = program.ToJsonString("    ");
 
             File.WriteAllText(

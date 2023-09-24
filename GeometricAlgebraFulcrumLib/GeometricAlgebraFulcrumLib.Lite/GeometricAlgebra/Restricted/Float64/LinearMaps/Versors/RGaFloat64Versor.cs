@@ -89,15 +89,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
         {
             throw new NotImplementedException();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override RGaFloat64KVector OmMap(RGaFloat64KVector mv)
-        {
-            return mv.Grade.IsEven() || IsEven
-                ? Multivector.Gp(mv).Gp(MultivectorInverse).GetKVectorPart(mv.Grade) 
-                : Multivector.Gp(-mv).Gp(MultivectorInverse).GetKVectorPart(mv.Grade);
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RGaFloat64Multivector OmMap(RGaFloat64Multivector mv)
         {

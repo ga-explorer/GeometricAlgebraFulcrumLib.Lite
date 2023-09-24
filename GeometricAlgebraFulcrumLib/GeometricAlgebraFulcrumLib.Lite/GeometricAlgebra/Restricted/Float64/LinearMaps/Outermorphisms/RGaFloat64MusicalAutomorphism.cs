@@ -154,7 +154,7 @@ public sealed class RGaFloat64MusicalAutomorphism :
     {
         return kVector switch
         {
-            RGaFloat64Scalar => Processor.CreateOneScalar(),
+            RGaFloat64Scalar s => s,
             RGaFloat64Vector v => OmMap(v),
             RGaFloat64Bivector bv => OmMap(bv),
             RGaFloat64HigherKVector kv => OmMap(kv),

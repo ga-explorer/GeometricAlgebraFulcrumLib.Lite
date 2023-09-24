@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves;
 
@@ -13,8 +12,29 @@ public class ConstantParametricCurve2D :
     public static ConstantParametricCurve2D Create(IFloat64Vector2D point)
     {
         return new ConstantParametricCurve2D(
+            Float64ScalarRange.Infinite,
             point,
-            Float64Vector2D.UnitSymmetric
+            Float64Vector2D.Zero
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ConstantParametricCurve2D Create(Float64ScalarRange parameterRange, IFloat64Vector2D point)
+    {
+        return new ConstantParametricCurve2D(
+            parameterRange,
+            point,
+            Float64Vector2D.Zero
+        );
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ConstantParametricCurve2D Create(double pointX, double pointY)
+    {
+        return new ConstantParametricCurve2D(
+            Float64ScalarRange.Infinite,
+            Float64Vector2D.Create(pointX, pointY),
+            Float64Vector2D.Zero
         );
     }
 
@@ -22,6 +42,17 @@ public class ConstantParametricCurve2D :
     public static ConstantParametricCurve2D Create(IFloat64Vector2D point, IFloat64Vector2D tangent)
     {
         return new ConstantParametricCurve2D(
+            Float64ScalarRange.Infinite,
+            point,
+            tangent
+        );
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ConstantParametricCurve2D Create(Float64ScalarRange parameterRange, IFloat64Vector2D point, IFloat64Vector2D tangent)
+    {
+        return new ConstantParametricCurve2D(
+            parameterRange,
             point,
             tangent
         );
@@ -32,13 +63,13 @@ public class ConstantParametricCurve2D :
 
     public Float64Vector2D Tangent { get; }
 
-    public Float64Range1D ParameterRange
-        => Float64Range1D.Infinite;
+    public Float64ScalarRange ParameterRange { get; }
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private ConstantParametricCurve2D(IFloat64Vector2D point, IFloat64Vector2D tangent)
+    private ConstantParametricCurve2D(Float64ScalarRange parameterRange, IFloat64Vector2D point, IFloat64Vector2D tangent)
     {
+        ParameterRange = parameterRange;
         Point = point.ToVector2D();
         Tangent = tangent.ToVector2D();
 

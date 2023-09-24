@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Bezier
 {
@@ -11,8 +10,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Bez
     {
         public Float64Vector3D Point1 { get; }
 
-        public Float64Range1D ParameterRange 
-            => Float64Range1D.Infinite;
+        public Float64ScalarRange ParameterRange 
+            => Float64ScalarRange.Infinite;
 
 
         public BezierCurve0Degree3D(IFloat64Vector3D point1)

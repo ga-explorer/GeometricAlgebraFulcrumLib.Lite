@@ -47,7 +47,7 @@ public sealed class GrVisualTriangleSurface3D :
         );
     }
     
-    public static GrVisualTriangleSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position1, GrVisualAnimatedVector3D position2, GrVisualAnimatedVector3D position3, GrVisualAnimationSpecs animationSpecs)
+    public static GrVisualTriangleSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position1, GrVisualAnimatedVector3D position2, GrVisualAnimatedVector3D position3)
     {
         return new GrVisualTriangleSurface3D(
             name,
@@ -55,7 +55,7 @@ public sealed class GrVisualTriangleSurface3D :
             Float64Vector3D.E1,
             Float64Vector3D.E2,
             Float64Vector3D.E3,
-            animationSpecs
+            position1.AnimationSpecs
         ).SetAnimatedPositions(position1, position2, position3);
     }
 
@@ -169,9 +169,7 @@ public sealed class GrVisualTriangleSurface3D :
                Position2.IsValid() &&
                Position3.IsValid() &&
                !Area.IsZero() &&
-               GetAnimatedGeometries().All(g => 
-                   g.IsValid(AnimationSpecs.TimeRange)
-               );
+               GetAnimatedGeometries().All(g => g.IsValid());
     }
     
     public override IReadOnlyList<GrVisualAnimatedGeometry> GetAnimatedGeometries()
@@ -193,7 +191,7 @@ public sealed class GrVisualTriangleSurface3D :
         return animatedGeometries;
     }
         
-    public GrVisualTriangleSurface3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+    public GrVisualTriangleSurface3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
     {
         AnimatedVisibility = visibility;
 
@@ -292,7 +290,7 @@ public sealed class GrVisualTriangleSurface3D :
     {
         Debug.Assert(IsValid());
 
-        foreach (var frameIndex in KeyFrameRange)
+        foreach (var frameIndex in GetValidFrameIndexSet())
         {
             var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

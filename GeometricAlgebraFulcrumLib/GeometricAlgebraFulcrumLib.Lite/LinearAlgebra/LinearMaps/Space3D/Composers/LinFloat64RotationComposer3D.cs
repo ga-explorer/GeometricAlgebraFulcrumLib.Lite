@@ -148,12 +148,35 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.LinearMaps.Space3D.Compo
         
         public LinFloat64RotationComposer3D AppendBasisAlignmentRotation(IFloat64Vector3D vector1, IFloat64Vector3D vector2)
         {
+            if (vector1.IsNearZero() && vector2.IsNearZero())
+                return this;
+
+            if (vector2.IsNearZero())
+                return AppendRotation(
+                    LinFloat64PlanarRotation3D.CreateFromRotatedVector(
+                        vector1,
+                        Float64Vector3D.E1
+                    )
+                );
+
+            if (vector1.IsNearZero())
+                return AppendRotation(
+                    LinFloat64PlanarRotation3D.CreateFromRotatedVector(
+                        vector2,
+                        Float64Vector3D.E2
+                    )
+                );
+
+            // TODO: This needs handling of case where vector1 = -e1
             var rotation1 = LinFloat64PlanarRotation3D.CreateFromRotatedVector(
                 vector1,
                 LinUnitBasisVector3D.PositiveX.ToVector3D()
             );
 
-            vector2 = rotation1.MapVector(vector2).RejectOnAxis(LinUnitBasisVector3D.PositiveX);
+            vector2 = 
+                rotation1
+                    .MapVector(vector2)
+                    .RejectOnAxis(LinUnitBasisVector3D.PositiveX);
 
             var rotation2 = LinFloat64PlanarRotation3D.CreateFromRotatedVector(
                 vector2,

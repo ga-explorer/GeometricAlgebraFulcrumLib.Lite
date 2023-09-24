@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
@@ -18,8 +16,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Cir
 
         public Float64Vector2D Center { get; }
         
-        public Float64Range1D ParameterRange 
-            => Float64Range1D.ZeroToOne;
+        public Float64ScalarRange ParameterRange 
+            => Float64ScalarRange.ZeroToOne;
         
 
         public ParametricCircle2D(IFloat64Vector2D center, double radius, bool reverseDirection = false)
@@ -102,19 +100,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Cir
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double GetLength()
+        public Float64Scalar GetLength()
         {
             return 2d * Math.PI * Radius;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double ParameterToLength(double parameterValue)
+        public Float64Scalar ParameterToLength(double parameterValue)
         {
             return parameterValue.ClampPeriodic(1d) * GetLength();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double LengthToParameter(double length)
+        public Float64Scalar LengthToParameter(double length)
         {
             var maxLength = GetLength();
 

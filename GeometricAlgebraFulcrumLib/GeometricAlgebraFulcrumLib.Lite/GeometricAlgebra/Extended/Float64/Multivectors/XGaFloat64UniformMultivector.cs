@@ -8,6 +8,7 @@ using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Multivectors.Composers;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Processors;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using Open.Collections;
 
 namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Multivectors
@@ -419,6 +420,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
                 .CreateComposer()
                 .SetTerms(idScalarPairs)
                 .GetUniformMultivector();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public XGaFloat64UniformMultivector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,29 +1,70 @@
-﻿namespace GeometricAlgebraFulcrumLib.Lite
+﻿using GeometricAlgebraFulcrumLib.Lite.Samples.Geometry.Conformal;
+
+namespace GeometricAlgebraFulcrumLib.Lite
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            //Samples.CGa4DBasicSamples.PointsExample();
-            //Samples.CGa4DBasicSamples.CirclesExample();
+            CGa5DBasicSamples.CGaBasisExample();
 
-            //Samples.CGa5DBasicSamples.TranslationExamples();
-            //Samples.CGa5DBasicSamples.DefineDirectionsExample();
-            //Samples.CGa5DBasicSamples.DefineFlatsExample();
-            //Samples.CGa5DBasicSamples.DefineTangentsExample();
-            //Samples.CGa5DBasicSamples.DefineRoundsExample();
-            //Samples.CGa4DBasicSamples.EncodingExamples();
-            //Samples.CGa5DBasicSamples.EncodingExamples();
-            //Samples.CGa5DBasicSamples.SphereExample();
-            //Samples.CGa5DBasicSamples.CGaPGaExample();
-            //Samples.CGa5DBasicSamples.PgaExamples();
-            //Samples.CGa5DBasicSamples.BasisExample();
-            Samples.CGa5DBasicSamples.VisualizationExample1();
+            //CGa5DElementsSamples.CGaDirectionsExample();
+            //CGa5DElementsSamples.CGaTangentsExample();
+            //CGa5DElementsSamples.CGaFlatsExample();
+            //CGa5DElementsSamples.CGaRoundsExample();
+            //CGa5DElementsSamples.CGaRealRoundsExample();
+            //CGa5DElementsSamples.CGaImaginaryRoundsExample();
 
-            //Samples.RaylibGraphicsSamples.Camera3dFreeExample();
-            //Samples.RaylibGraphicsSamples.GeometricShapesExample();
-            //Samples.RayMarchingShapes.RayMarchingShapesExample();
-            //Samples.Graphics.LaTeX.LaTeXSamples.CSharpMathExample1();
+            //CGa5DIntersectionSamples.FlatWithFlatIntersection();
+            //CGa5DIntersectionSamples.FlatWithRoundIntersection();
+            //CGa5DIntersectionSamples.RoundWithRoundIntersection();
+
+            //DifferentialCurveAnimationSample.Example2();
+
+            //CGa4DBasicSamples.PointsExample();
+            //CGa4DBasicSamples.CirclesExample();
+
+            //CGa5DBasicSamples.TranslationExamples();
+            //CGa5DBasicSamples.CGaEncodingExamples();
+            //CGa5DBasicSamples.SphereExample();
+            //CGa5DBasicSamples.CGaPGaExample();
+
+            //CGa5DConstructionSamples.Example1();
+            //CGa5DConstructionSamples.Example2();
+
+            //CGa4DVisualizationSamples.ParametricLineExample1();
+            //CGa4DVisualizationSamples.ParametricLineExample2();
+            //CGa4DVisualizationSamples.ParametricPointPairExample1();
+            //CGa4DVisualizationSamples.ParametricPointPairExample2();
+            //CGa4DVisualizationSamples.ParametricCircleExample1();
+            //CGa4DVisualizationSamples.ParametricCircleExample2();
+            //CGa4DVisualizationSamples.ParametricCircleCircleIntersectionExample();
+            //CGa4DVisualizationSamples.ParametricCircleLineIntersectionExample();
+            //CGa4DVisualizationSamples.ParametricCircleOnCircleReflectionExample();
+            //CGa4DVisualizationSamples.ParametricCircleOnLineReflectionExample();
+            //CGa4DVisualizationSamples.ParametricPointPairOnLineReflectionExample();
+            //CGa4DVisualizationSamples.ParametricCircleInterpolationExample();
+
+            //CGa5DVisualizationSamples.StaticFlatsExample();
+            //CGa5DVisualizationSamples.StaticRoundsExample();
+            //CGa5DVisualizationSamples.ParametricLineExample1();
+            //CGa5DVisualizationSamples.ParametricLineExample2();
+            //CGa5DVisualizationSamples.ParametricPlaneExample1();
+            //CGa5DVisualizationSamples.ParametricPlaneExample2();
+            //CGa5DVisualizationSamples.ParametricPointPairExample1();
+            //CGa5DVisualizationSamples.ParametricPointPairExample2();
+            //CGa5DVisualizationSamples.ParametricCircleExample1();
+            //CGa5DVisualizationSamples.ParametricCircleExample2();
+            //CGa5DVisualizationSamples.ParametricSphereExample1();
+            //CGa5DVisualizationSamples.ParametricSphereExample2();
+            //CGa5DVisualizationSamples.ParametricSphereSphereIntersectionExample();
+            //CGa5DVisualizationSamples.ParametricSpherePlaneIntersectionExample();
+            //CGa5DVisualizationSamples.ParametricSphereLineIntersectionExample();
+            //CGa5DVisualizationSamples.ParametricSphereCircleIntersectionExample();
+            //CGa5DVisualizationSamples.ParametricCircleOnPlaneReflectionExample();
+            //CGa5DVisualizationSamples.ParametricCircleOnSphereReflectionExample();
+            //CGa5DVisualizationSamples.ParametricCircleInterpolationExample();
+
         }
     }
 }

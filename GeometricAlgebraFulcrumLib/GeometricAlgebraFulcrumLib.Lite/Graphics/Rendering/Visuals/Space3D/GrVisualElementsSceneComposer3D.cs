@@ -178,60 +178,56 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
             return this;
         }
         
-        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, IGrVisualElementMaterial3D material, double thickness, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, IGrVisualElementMaterial3D material, double thickness)
         {
             AddLineSegment(
-                GrVisualLineSegment3D.Create(
+                GrVisualLineSegment3D.CreateStatic(
                     name,
                     material.CreateTubeCurveStyle(thickness), 
                     point1, 
-                    point2,
-                    animationSpecs
+                    point2
                 )
             );
 
             return this;
         }
 
-        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, Color color, double thickness, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, Color color, double thickness)
         {
             AddLineSegment(
-                GrVisualLineSegment3D.Create(
+                GrVisualLineSegment3D.CreateStatic(
                     name, 
                     AddOrGetColorMaterial(color).CreateTubeCurveStyle(thickness),
                     point1, 
-                    point2,
-                    animationSpecs
+                    point2
                 )
             );
 
             return this;
         }
     
-        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, Color color, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, Color color)
         {
             AddLineSegment(
-                GrVisualLineSegment3D.Create(
+                GrVisualLineSegment3D.CreateStatic(
                     name, 
                     color.CreateSolidLineCurveStyle(),
                     point1, 
-                    point2,
-                    animationSpecs
+                    point2
                 )
             );
 
             return this;
         }
         
-        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, Color color, GrVisualDashedLineSpecs dashSpecs, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddLineSegment(string name, IFloat64Vector3D point1, IFloat64Vector3D point2, Color color, GrVisualDashedLineSpecs dashSpecs)
         {
             AddLineSegment(
-                GrVisualLineSegment3D.Create(
+                GrVisualLineSegment3D.CreateStatic(
                     name, 
                     new GrVisualCurveDashedLineStyle3D(color, dashSpecs), 
                     point1, 
-                    point2,
-                    animationSpecs
+                    point2
                 )
             );
 
@@ -714,94 +710,88 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
             return this;
         }
     
-        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, IGrVisualElementMaterial3D material, double thickness, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, IGrVisualElementMaterial3D material, double thickness)
         {
             AddSphereSurface(
-                GrVisualSphereSurface3D.Create(
+                GrVisualSphereSurface3D.CreateStatic(
                     name,
                     material.CreateThickSurfaceStyle(thickness),
                     center,
-                    radius,
-                    animationSpecs
+                    radius
                 )
             );
 
             return this;
         }
     
-        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, Color color, double thickness, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, Color color, double thickness)
         {
             AddSphereSurface(
-                GrVisualSphereSurface3D.Create(
+                GrVisualSphereSurface3D.CreateStatic(
                     name,
                     AddOrGetColorMaterial(color).CreateThickSurfaceStyle(thickness),
                     center,
-                    radius,
-                    animationSpecs
+                    radius
                 )
             );
 
             return this;
         }
     
-        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, IGrVisualElementMaterial3D material, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, IGrVisualElementMaterial3D material)
         {
             AddSphereSurface(
-                GrVisualSphereSurface3D.Create(
+                GrVisualSphereSurface3D.CreateStatic(
                     name,
                     material.CreateThinSurfaceStyle(),
                     center,
-                    radius,
-                    animationSpecs
+                    radius
                 )
             );
 
             return this;
         }
 
-        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, Color color, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddSphereSurface(string name, IFloat64Vector3D center, double radius, Color color)
         {
             AddSphereSurface(
-                GrVisualSphereSurface3D.Create(
+                GrVisualSphereSurface3D.CreateStatic(
                     name,
                     AddOrGetColorMaterial(color).CreateThinSurfaceStyle(),
                     center,
-                    radius,
-                    animationSpecs
+                    radius
                 )
             );
 
             return this;
         }
     
-        public GrVisualElementsSceneComposer3D<T> AddTorus(string name, IFloat64Vector3D center, IFloat64Vector3D normal, double minRadius, double maxRadius, IGrVisualElementMaterial3D material, double thickness, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddTorus(string name, IFloat64Vector3D center, IFloat64Vector3D normal, double minRadius, double maxRadius, IGrVisualElementMaterial3D material, double thickness)
         {
             AddCircleRingSurface(
-                GrVisualCircleRingSurface3D.Create(
+                GrVisualCircleRingSurface3D.CreateStatic(
                     name,
                     material.CreateThickSurfaceStyle(thickness),
                     center,
                     normal,
                     minRadius,
-                    maxRadius,
-                    animationSpecs
+                    maxRadius
                 )
             );
 
             return this;
         }
 
-        public GrVisualElementsSceneComposer3D<T> AddTorus(string name, IFloat64Vector3D center, IFloat64Vector3D normal, double minRadius, double maxRadius, Color color, double thickness, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddTorus(string name, IFloat64Vector3D center, IFloat64Vector3D normal, double minRadius, double maxRadius, Color color, double thickness)
         {
             AddCircleRingSurface(
-                GrVisualCircleRingSurface3D.Create(
+                GrVisualCircleRingSurface3D.CreateStatic(
                     name,
                     AddOrGetColorMaterial(color).CreateThickSurfaceStyle(thickness),
                     center,
                     normal,
                     minRadius,
-                    maxRadius,
-                    animationSpecs
+                    maxRadius
                 )
             );
 
@@ -1292,7 +1282,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
             return this;
         }
         
-        public GrVisualElementsSceneComposer3D<T> AddLaTeXText(string name, WclHtmlImageDataUrlCache pngCache, GrVisualAnimatedVector3D origin, double scalingFactor, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddLaTeXText(string name, WclHtmlImageDataUrlCache pngCache, GrVisualAnimatedVector3D origin, double scalingFactor)
         {
             AddLaTeXText(
                 GrVisualLaTeXText3D.CreateAnimated(
@@ -1300,8 +1290,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
                     pngCache, 
                     name, 
                     origin, 
-                    scalingFactor,
-                    animationSpecs
+                    scalingFactor
                 )
             );
 
@@ -1323,7 +1312,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
             return this;
         }
         
-        public GrVisualElementsSceneComposer3D<T> AddLaTeXText(string name, WclHtmlImageDataUrlCache pngCache, string key, GrVisualAnimatedVector3D origin, double scalingFactor, GrVisualAnimationSpecs animationSpecs)
+        public GrVisualElementsSceneComposer3D<T> AddLaTeXText(string name, WclHtmlImageDataUrlCache pngCache, string key, GrVisualAnimatedVector3D origin, double scalingFactor)
         {
             AddLaTeXText(
                 GrVisualLaTeXText3D.CreateAnimated(
@@ -1331,8 +1320,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
                     pngCache, 
                     key, 
                     origin, 
-                    scalingFactor,
-                    animationSpecs
+                    scalingFactor
                 )
             );
 
@@ -1438,6 +1426,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
 
             return visualElement;
         }
+        
+        public GrVisualBivector3D AddBivector(GrVisualBivector3D visualElement)
+        {
+            foreach (var childElement in visualElement)
+                AddElement(childElement);
+
+            return visualElement;
+        }
 
         public GrVisualFrame3D AddFrame(GrVisualFrame3D visualElement)
         {
@@ -1449,8 +1445,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D
 
 
         public abstract GrVisualLaTeXText3D AddLaTeXText(GrVisualLaTeXText3D visualElement);
-
-        public abstract GrVisualXzSquareGrid3D AddXzSquareGrid(GrVisualXzSquareGrid3D visualElement);
+        
+        public abstract GrVisualSquareGrid3D AddSquareGrid(GrVisualSquareGrid3D visualElement);
 
         public abstract IGrVisualImage3D AddImage(IGrVisualImage3D visualElement);
 

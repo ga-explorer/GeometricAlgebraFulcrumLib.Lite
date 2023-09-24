@@ -40,7 +40,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes.Curves
             => Vertices.Select(v => v.Normal1);
 
         public IEnumerable<double> VertexTextureUs 
-            => Vertices.Select(v => v.ParameterValue);
+            => Vertices.Select(v => v.ParameterValue.Value);
 
         public IEnumerable<Color> VertexColors 
             => Vertices.Select(v => v.Color);

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Computers;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space2D.Traversal
 {
@@ -12,8 +12,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space2D.Trav
 
         public double LineParameterMaxValue { get; private set; }
 
-        public Float64Range1D LineParameterRange
-            => Float64Range1D.Create(
+        public Float64ScalarRange LineParameterRange
+            => Float64ScalarRange.Create(
                 LineParameterMinValue,
                 LineParameterMaxValue
             );
@@ -28,7 +28,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space2D.Trav
             BihNode = bihNode;
         }
 
-        internal AccBihLineTraversalState2D(IAccBihNode2D bihNode, Float64Range1D lineParameterRange)
+        internal AccBihLineTraversalState2D(IAccBihNode2D bihNode, Float64ScalarRange lineParameterRange)
         {
             Debug.Assert(!ReferenceEquals(bihNode, null));
 
@@ -38,7 +38,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.BIH.Space2D.Trav
         }
 
 
-        public bool RestrictLineParameterRange(Float64Range1D lineParamLimits)
+        public bool RestrictLineParameterRange(Float64ScalarRange lineParamLimits)
         {
             if (LineParameterMaxValue < lineParamLimits.MinValue ||
                 LineParameterMinValue > lineParamLimits.MaxValue)

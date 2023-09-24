@@ -2,7 +2,6 @@
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Adaptive;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.LatticeShapes.Surfaces;
 using GeometricAlgebraFulcrumLib.Lite.Graphics.Primitives;

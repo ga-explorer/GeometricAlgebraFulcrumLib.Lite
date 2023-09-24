@@ -57,7 +57,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Sp
         public RGaFloat64Vector GetPosition()
         {
             return Vector
-                .GetVectorPart(index => index < Space.VSpaceDimensions - 2)
+                .GetVectorPart((int index) => index < Space.VSpaceDimensions - 2)
                 .Divide(Weight());
         }
         

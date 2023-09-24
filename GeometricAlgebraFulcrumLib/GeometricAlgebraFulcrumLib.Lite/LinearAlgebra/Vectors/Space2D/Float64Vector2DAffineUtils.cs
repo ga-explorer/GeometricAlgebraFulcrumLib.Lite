@@ -296,6 +296,33 @@ public static class Float64Vector2DAffineUtils
         return angle.Rotate(vector);
     }
     
+    public static Float64Vector2D RotateToUnitVector(this IFloat64Vector2D vector1, IFloat64Vector2D unitVector, Float64PlanarAngle angle)
+    {
+        Debug.Assert(
+            vector1.IsNearUnit() &&
+            unitVector.IsNearUnit()
+        );
+
+        // Create a unit normal to u in the u-v rotational plane
+        var v1Dot2 = unitVector.ESp(vector1);
+
+        var v1 = v1Dot2.Abs().IsNearOne()
+            ? vector1.GetNormal()
+            : unitVector.Subtract(vector1.Times(v1Dot2));
+        
+        var v1Length = v1.ENorm();
+
+        Debug.Assert(
+            v1.ESp(vector1).IsNearZero() &&
+            !v1Length.IsNearZero()
+        );
+        
+        // Compute a rotated version of v in the u-v rotational plane by the given angle
+        return vector1
+            .Times(angle.Cos())
+            .Add(v1.Times(angle.Sin() / v1Length));
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Float64Vector2D ReflectVectorOnVector(this IFloat64Vector2D reflectionVector, IFloat64Vector2D vector)
     {
@@ -351,7 +378,7 @@ public static class Float64Vector2DAffineUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Float64Vector2D FaceDirection(this IFloat64Vector2D vector, IFloat64Vector2D directionVector)
     {
-        Debug.Assert(!directionVector.IsZeroVector());
+        Debug.Assert(!directionVector.IsZero());
 
         return
             (vector.X * directionVector.X + vector.Y * directionVector.Y).IsNegative()
@@ -425,5 +452,20 @@ public static class Float64Vector2DAffineUtils
             );
         }
     }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector2D SetLength(this IFloat64Vector2D vector, double newLength)
+    {
+        var oldLength = vector.ENorm();
 
+        if (oldLength.IsZero())
+            return Float64Vector2D.Zero;
+
+        var scalingFactor = newLength / oldLength;
+
+        return Float64Vector2D.Create(
+            vector.X * scalingFactor,
+            vector.Y * scalingFactor
+        );
+    }
 }

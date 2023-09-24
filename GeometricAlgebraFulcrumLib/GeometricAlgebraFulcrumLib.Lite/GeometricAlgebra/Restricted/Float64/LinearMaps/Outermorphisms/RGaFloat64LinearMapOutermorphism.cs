@@ -101,20 +101,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
             
             return composer.GetHigherKVector(kVector.Grade);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public override RGaFloat64KVector OmMap(RGaFloat64KVector kVector)
-        {
-            return kVector switch
-            {
-                RGaFloat64Scalar => Processor.CreateOneScalar(),
-                RGaFloat64Vector v => OmMap(v),
-                RGaFloat64Bivector bv => OmMap(bv),
-                RGaFloat64HigherKVector kv => OmMap(kv),
-                _ => throw new InvalidOperationException()
-            };
-        }
-
+        
         public override RGaFloat64Multivector OmMap(RGaFloat64Multivector multivector)
         {
             var composer = Processor.CreateComposer();

@@ -70,7 +70,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             );
         }
         
-        public static GrVisualParallelogramSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualParallelogramSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position)
         {
             return new GrVisualParallelogramSurface3D(
                 name,
@@ -78,11 +78,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
                 Float64Vector3D.Zero,
                 Float64Vector3D.E1,
                 Float64Vector3D.E2,
-                animationSpecs
+                position.AnimationSpecs
             ).SetAnimatedPosition(position);
         }
 
-        public static GrVisualParallelogramSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualParallelogramSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D position, GrVisualAnimatedVector3D direction1, GrVisualAnimatedVector3D direction2)
         {
             return new GrVisualParallelogramSurface3D(
                 name,
@@ -90,7 +90,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
                 Float64Vector3D.Zero,
                 Float64Vector3D.E1,
                 Float64Vector3D.E2,
-                animationSpecs
+                position.AnimationSpecs
             ).SetAnimatedPositionDirections(position, direction1, direction2);
         }
 
@@ -216,9 +216,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             return Position.IsValid() &&
                    Direction1.IsValid() &&
                    Direction2.IsValid() &&
-                   GetAnimatedGeometries().All(g => 
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
         
         public override IReadOnlyList<GrVisualAnimatedGeometry> GetAnimatedGeometries()
@@ -240,7 +238,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             return animatedGeometries;
         }
         
-        public GrVisualParallelogramSurface3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualParallelogramSurface3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
 
@@ -378,7 +376,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

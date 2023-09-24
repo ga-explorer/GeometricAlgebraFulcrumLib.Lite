@@ -6,7 +6,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
         IRGaFloat64Element
     {
         IRGaFloat64UnilinearMap GetAdjoint();
-    
+        
         RGaFloat64Multivector MapBasisBlade(ulong id);
     
         RGaFloat64Multivector Map(RGaFloat64Multivector multivector);

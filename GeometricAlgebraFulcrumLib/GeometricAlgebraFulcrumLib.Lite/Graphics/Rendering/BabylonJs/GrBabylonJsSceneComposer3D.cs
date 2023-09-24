@@ -189,7 +189,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
 
         public override IGrVisualElementMaterial3D AddOrGetColorMaterial(Color color)
         {
-            var key = color.ToHex();
+            var key = color.ToPixel<Rgba32>().ToHex();
 
             if (_colorMaterialCache.TryGetValue(key, out var material))
                 return material;
@@ -317,8 +317,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
             );
         }
 
-
-        public override GrVisualXzSquareGrid3D AddXzSquareGrid(GrVisualXzSquareGrid3D visualElement)
+        
+        public override GrVisualSquareGrid3D AddSquareGrid(GrVisualSquareGrid3D visualElement)
         {
             if (GridMaterialKind == GrBabylonJsGridMaterialKind.TexturedMaterial)
             {
@@ -340,8 +340,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
                     new GrBabylonJsTexture.TextureProperties
                     {
                         HasAlpha = true,
-                        UScale = visualElement.UnitCountX,
-                        VScale = visualElement.UnitCountZ
+                        UScale = visualElement.UnitCount1,
+                        VScale = visualElement.UnitCount2
                     }
                 );
 
@@ -350,6 +350,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
 
                     new GrBabylonJsStandardMaterial.StandardMaterialProperties
                     {
+                        BackFaceCulling = false,
+                        SideOrientation = GrBabylonJsMeshOrientation.FrontAndBack,
                         DiffuseTexture = $"{visualElement.Name}Texture",
                         UseAlphaFromDiffuseTexture = true,
                         TransparencyMode = GrBabylonJsMaterialTransparencyMode.AlphaBlend,
@@ -364,6 +366,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
 
                     new GrBabylonJsGridMaterial.GridMaterialProperties
                     {
+                        BackFaceCulling = false,
+                        SideOrientation = GrBabylonJsMeshOrientation.FrontAndBack,
                         LineColor = visualElement.BaseLineColor,
                         MainColor = visualElement.BaseSquareColor,
                         Opacity = visualElement.Opacity,
@@ -382,17 +386,35 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
 
                 new GrBabylonJsGround.GroundOptions
                 {
-                    Width = visualElement.SizeX,
-                    Height = visualElement.SizeZ
+                    Width = visualElement.Size1,
+                    Height = visualElement.Size2
                 },
 
                 new GrBabylonJsMesh.MeshProperties
                 {
                     Material = $"{visualElement.Name}Material",
-                    Position = visualElement.Origin +
-                               Float64Vector3D.Create(0.5d * visualElement.SizeX,
-                                   0,
-                                   0.5d * visualElement.SizeZ)
+                    Position = visualElement.MidPoint,
+                    RotationQuaternion = visualElement.GridPlane switch
+                    {
+                        GrVisualSquareGridPlane3D.XyPlane => 
+                            LinUnitBasisVector3D
+                                .PositiveY
+                                .CreateAxisToAxisRotationQuaternion(
+                                    LinUnitBasisVector3D.NegativeZ
+                                ),
+
+                        GrVisualSquareGridPlane3D.YzPlane => 
+                            LinUnitBasisVector3D
+                                .PositiveY
+                                .CreateAxisToAxisRotationQuaternion(
+                                    LinUnitBasisVector3D.NegativeX
+                                ),
+
+                        GrVisualSquareGridPlane3D.ZxPlane => 
+                            Float64Quaternion.Identity,
+
+                        _ => throw new InvalidOperationException()
+                    }
                 }
             );
 
@@ -408,8 +430,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
 
                     return visualElement;
 
-                case GrVisualXzSquareGrid3D xzSquareGridImage:
-                    AddXzSquareGrid(xzSquareGridImage);
+                case GrVisualSquareGrid3D xzSquareGridImage:
+                    AddSquareGrid(xzSquareGridImage);
 
                     return visualElement;
             }
@@ -450,7 +472,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
                     Material = visualElement.Style.Material.MaterialName,
                     Visibility = visualElement.Visibility,
                     Position = visualElement.Position.ToBabylonJsVector3Value(),
-                    Scaling = Float64Vector3D.CreateSymmetricVector(visualElement.Style.Thickness)
+                    Scaling = Float64Vector3D.CreateEqualXyz(visualElement.Style.Thickness)
                 }
             );
             
@@ -2147,7 +2169,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
                     Material = visualElement.Style.Material.MaterialName,
                     Visibility = visualElement.Visibility,
                     Position = visualElement.Center.ToBabylonJsVector3Value(),
-                    Scaling = Float64Vector3D.CreateSymmetricVector(outerRadius)
+                    Scaling = Float64Vector3D.CreateEqualXyz(outerRadius)
                 }
             );
                 
@@ -2160,7 +2182,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
                     Material = visualElement.Style.Material.MaterialName,
                     Visibility = visualElement.Visibility,
                     Position = visualElement.Center.ToBabylonJsVector3Value(),
-                    Scaling = Float64Vector3D.CreateSymmetricVector(innerRadius)
+                    Scaling = Float64Vector3D.CreateEqualXyz(innerRadius)
                 }
             );
 
@@ -2181,7 +2203,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
                     Material = visualElement.Style.Material.MaterialName,
                     Visibility = visualElement.Visibility,
                     Position = visualElement.Center.ToBabylonJsVector3Value(),
-                    Scaling = Float64Vector3D.CreateSymmetricVector(visualElement.Radius)
+                    Scaling = Float64Vector3D.CreateEqualXyz(visualElement.Radius)
                 }
             );
 
@@ -2934,31 +2956,132 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.BabylonJs
             return this;
         }
         
-        public GrBabylonJsSceneComposer3D AddDefaultGrid(int gridUnitCount)
+        public GrBabylonJsSceneComposer3D AddDefaultGridXy(int gridUnitCount, double unitSize = 1, double zValue = 0, double opacity = 0.25)
         {
-            // Add ground coordinates grid
+            return AddDefaultGrid(
+                GrBabylonJsDefaultGridSpecs.CreateXy(
+                    gridUnitCount, 
+                    unitSize, 
+                    zValue, 
+                    opacity
+                )
+            );
+        }
+
+        public GrBabylonJsSceneComposer3D AddDefaultGridYz(int gridUnitCount, double unitSize = 1, double xValue = 0, double opacity = 0.25)
+        {
+            return AddDefaultGrid(
+                GrBabylonJsDefaultGridSpecs.CreateYz(
+                    gridUnitCount, 
+                    unitSize, 
+                    xValue, 
+                    opacity
+                )
+            );
+        }
+
+        public GrBabylonJsSceneComposer3D AddDefaultGridZx(int gridUnitCount, double unitSize = 1, double yValue = 0, double opacity = 0.25)
+        {
+            return AddDefaultGrid(
+                GrBabylonJsDefaultGridSpecs.CreateZx(
+                    gridUnitCount, 
+                    unitSize, 
+                    yValue, 
+                    opacity
+                )
+            );
+        }
+        
+        public GrBabylonJsSceneComposer3D AddDefaultGridXyz(int gridUnitCount, double unitSize = 1, double opacity = 0.25)
+        {
+            return AddDefaultGrid(
+                GrBabylonJsDefaultGridSpecs.CreateXyz(
+                    gridUnitCount, 
+                    unitSize, 
+                    opacity
+                )
+            );
+        }
+
+        public GrBabylonJsSceneComposer3D AddDefaultGrid(GrBabylonJsDefaultGridSpecs gridSpecs)
+        {
             GridMaterialKind =
                 GrBabylonJsGridMaterialKind.TexturedMaterial;
+            
+            if (gridSpecs.ShowXyGrid)
+            {
+                AddSquareGrid(
+                    new GrVisualSquareGrid3D("defaultGridXy", GrVisualSquareGridPlane3D.XyPlane)
+                    {
+                        UnitCount1 = gridSpecs.UnitCount,
+                        UnitCount2 = gridSpecs.UnitCount,
+                        UnitSize = gridSpecs.UnitSize,
+                        DistanceToOrigin = gridSpecs.XyGridZValue,
+                        Offset1 = 0,
+                        Offset2 = 0,
+                        Opacity = gridSpecs.Opacity,
+                        BaseSquareColor = Color.LightYellow,
+                        BaseLineColor = Color.BurlyWood,
+                        MidLineColor = Color.SandyBrown,
+                        BorderLineColor = Color.SaddleBrown,
+                        BaseSquareCount = 4,
+                        BaseSquareSize = 64,
+                        BaseLineWidth = 2,
+                        MidLineWidth = 4,
+                        BorderLineWidth = 3
+                    }
+                );
+            }
 
-            AddXzSquareGrid(
-                new GrVisualXzSquareGrid3D("defaultGrid")
-                {
-                    UnitCountX = gridUnitCount,
-                    UnitCountZ = gridUnitCount,
-                    UnitSize = 1,
-                    Origin = Float64Vector3D.Create(-0.5d * gridUnitCount, 0, -0.5d * gridUnitCount),
-                    Opacity = 0.25,
-                    BaseSquareColor = Color.LightYellow,
-                    BaseLineColor = Color.BurlyWood,
-                    MidLineColor = Color.SandyBrown,
-                    BorderLineColor = Color.SaddleBrown,
-                    BaseSquareCount = 4,
-                    BaseSquareSize = 64,
-                    BaseLineWidth = 2,
-                    MidLineWidth = 4,
-                    BorderLineWidth = 3
-                }
-            );
+            if (gridSpecs.ShowYzGrid)
+            {
+                AddSquareGrid(
+                    new GrVisualSquareGrid3D("defaultGridYz", GrVisualSquareGridPlane3D.YzPlane)
+                    {
+                        UnitCount1 = gridSpecs.UnitCount,
+                        UnitCount2 = gridSpecs.UnitCount,
+                        UnitSize = gridSpecs.UnitSize,
+                        DistanceToOrigin = gridSpecs.YzGridXValue,
+                        Offset1 = 0,
+                        Offset2 = 0,
+                        Opacity = gridSpecs.Opacity,
+                        BaseSquareColor = Color.LightYellow,
+                        BaseLineColor = Color.BurlyWood,
+                        MidLineColor = Color.SandyBrown,
+                        BorderLineColor = Color.SaddleBrown,
+                        BaseSquareCount = 4,
+                        BaseSquareSize = 64,
+                        BaseLineWidth = 2,
+                        MidLineWidth = 4,
+                        BorderLineWidth = 3
+                    }
+                );
+            }
+
+            if (gridSpecs.ShowZxGrid)
+            {
+                AddSquareGrid(
+                    new GrVisualSquareGrid3D("defaultGridZx", GrVisualSquareGridPlane3D.ZxPlane)
+                    {
+                        UnitCount1 = gridSpecs.UnitCount,
+                        UnitCount2 = gridSpecs.UnitCount,
+                        UnitSize = gridSpecs.UnitSize,
+                        DistanceToOrigin = gridSpecs.ZxGridYValue,
+                        Offset1 = 0,
+                        Offset2 = 0,
+                        Opacity = gridSpecs.Opacity,
+                        BaseSquareColor = Color.LightYellow,
+                        BaseLineColor = Color.BurlyWood,
+                        MidLineColor = Color.SandyBrown,
+                        BorderLineColor = Color.SaddleBrown,
+                        BaseSquareCount = 4,
+                        BaseSquareSize = 64,
+                        BaseLineWidth = 2,
+                        MidLineWidth = 4,
+                        BorderLineWidth = 3
+                    }
+                );
+            }
 
             return this;
         }

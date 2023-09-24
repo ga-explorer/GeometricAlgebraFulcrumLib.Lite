@@ -1,6 +1,5 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves
 {
@@ -10,7 +9,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves
     public interface IParametricCurve3D :
         IGeometricElement
     {
-        Float64Range1D ParameterRange { get; }
+        Float64ScalarRange ParameterRange { get; }
         
         Float64Vector3D GetPoint(double parameterValue);
 

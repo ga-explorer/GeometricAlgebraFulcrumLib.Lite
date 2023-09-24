@@ -114,6 +114,21 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
             };
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RGaFloat64Multivector RemoveSmallTerms(this RGaFloat64Multivector mv, double epsilon = 1e-12)
+        {
+            return mv switch
+            {
+                RGaFloat64Scalar s => s,
+                RGaFloat64Vector v => v.RemoveSmallTerms(epsilon),
+                RGaFloat64Bivector bv => bv.RemoveSmallTerms(epsilon),
+                RGaFloat64HigherKVector kv => kv.RemoveSmallTerms(epsilon),
+                RGaFloat64GradedMultivector mv1 => mv1.RemoveSmallTerms(epsilon),
+                RGaFloat64UniformMultivector mv1 => mv1.RemoveSmallTerms(epsilon),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Tuple<RGaFloat64Scalar, RGaFloat64Bivector> GetScalarBivectorParts(this RGaFloat64Multivector mv)
@@ -595,9 +610,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64Vector3D GetVectorPartAsTuple3D(this RGaFloat64Multivector mv)
         {
-            return Float64Vector3D.Create(mv.GetBasisBladeScalar(1),
-                mv.GetBasisBladeScalar(2),
-                mv.GetBasisBladeScalar(4));
+            return Float64Vector3D.Create(mv[1], mv[2], mv[3]);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

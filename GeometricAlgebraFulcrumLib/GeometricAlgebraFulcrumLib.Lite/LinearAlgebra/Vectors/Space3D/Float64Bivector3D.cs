@@ -8,7 +8,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
 {
     public sealed record Float64Bivector3D : 
         ITriplet<double>, 
-        IFloat64Multivector3D
+        IFloat64KVector3D
     {
         public static Float64Bivector3D Zero { get; }
             = new Float64Bivector3D(
@@ -78,7 +78,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Bivector3D Create(Float64Scalar scalar12, Float64Scalar scalar13, Float64Scalar scalar23)
+        public static Float64Bivector3D Create(double scalar12, double scalar13, double scalar23)
         {
             return new Float64Bivector3D(scalar12, scalar13, scalar23);
         }
@@ -157,6 +157,9 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D
         
         public int VSpaceDimensions 
             => 3;
+
+        public int Grade 
+            => 2;
 
         public double Item1 
             => Scalar12;

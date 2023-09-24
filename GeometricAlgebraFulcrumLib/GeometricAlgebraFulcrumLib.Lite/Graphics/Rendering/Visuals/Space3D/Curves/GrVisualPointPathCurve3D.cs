@@ -72,13 +72,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
             );
         }
         
-        public static GrVisualPointPathCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVectorPath3D positionPath, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualPointPathCurve3D CreateAnimated(string name, GrVisualCurveStyle3D style, GrVisualAnimatedVectorPath3D positionPath)
         {
             return new GrVisualPointPathCurve3D(
                 name,
                 style,
-                positionPath.GetPointsPath(animationSpecs.MinTime),
-                animationSpecs
+                positionPath.GetPointsPath(positionPath.AnimationSpecs.MinFrameTime),
+                positionPath.AnimationSpecs
             ).SetAnimatedPositionPath(positionPath);
         }
         
@@ -134,11 +134,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
         public override bool IsValid()
         {
             return PositionPath.All(position => position.IsValid()) &&
-                   AnimatedPositionPath.IsNullOrValid(AnimationSpecs.TimeRange);
+                   AnimatedPositionPath.IsNullOrValid(AnimationSpecs.FrameTimeRange);
         }
 
 
-        public GrVisualPointPathCurve3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualPointPathCurve3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
 
@@ -181,7 +181,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Cur
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

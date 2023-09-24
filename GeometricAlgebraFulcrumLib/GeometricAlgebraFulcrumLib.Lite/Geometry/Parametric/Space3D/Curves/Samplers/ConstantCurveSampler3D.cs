@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Samplers;
 
@@ -21,7 +20,7 @@ public class ConstantCurveSampler3D :
     public Float64Vector3D Tangent 
         => ConstantCurve.Tangent;
 
-    public Float64Range1D ParameterRange { get; private set; }
+    public Float64ScalarRange ParameterRange { get; private set; }
 
     public bool IsPeriodic 
         => true;
@@ -44,7 +43,7 @@ public class ConstantCurveSampler3D :
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler3D(IFloat64Vector3D point, Float64Range1D parameterRange)
+    public ConstantCurveSampler3D(IFloat64Vector3D point, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve3D.Create(point, Float64Vector3D.E1);
         ParameterRange = parameterRange;
@@ -53,7 +52,7 @@ public class ConstantCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler3D(IFloat64Vector3D point, IFloat64Vector3D tangent, Float64Range1D parameterRange)
+    public ConstantCurveSampler3D(IFloat64Vector3D point, IFloat64Vector3D tangent, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve3D.Create(point, tangent);
         ParameterRange = parameterRange;
@@ -70,7 +69,7 @@ public class ConstantCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler3D SetCurve(IFloat64Vector3D point, Float64Range1D parameterRange)
+    public ConstantCurveSampler3D SetCurve(IFloat64Vector3D point, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve3D.Create(point, Float64Vector3D.E1);
         ParameterRange = parameterRange;
@@ -81,7 +80,7 @@ public class ConstantCurveSampler3D :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler3D SetCurve(IFloat64Vector3D point, IFloat64Vector3D tangent, Float64Range1D parameterRange)
+    public ConstantCurveSampler3D SetCurve(IFloat64Vector3D point, IFloat64Vector3D tangent, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve3D.Create(point, tangent);
         ParameterRange = parameterRange;
@@ -92,14 +91,14 @@ public class ConstantCurveSampler3D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetParameterValues()
+    public IEnumerable<Float64Scalar> GetParameterValues()
     {
         yield return ParameterRange.MinValue;
         yield return ParameterRange.MaxValue;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<Float64Range1D> GetParameterSections()
+    public IEnumerable<Float64ScalarRange> GetParameterSections()
     {
         yield return ParameterRange;
     }

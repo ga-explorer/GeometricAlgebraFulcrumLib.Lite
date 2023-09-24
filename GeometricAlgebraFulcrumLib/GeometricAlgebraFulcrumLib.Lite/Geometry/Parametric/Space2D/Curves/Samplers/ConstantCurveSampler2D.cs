@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Samplers;
 
@@ -21,7 +20,7 @@ public class ConstantCurveSampler2D :
     public Float64Vector2D Tangent 
         => ConstantCurve.Tangent;
 
-    public Float64Range1D ParameterRange { get; private set; }
+    public Float64ScalarRange ParameterRange { get; private set; }
 
     public bool IsPeriodic 
         => true;
@@ -44,7 +43,7 @@ public class ConstantCurveSampler2D :
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler2D(IFloat64Vector2D point, Float64Range1D parameterRange)
+    public ConstantCurveSampler2D(IFloat64Vector2D point, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve2D.Create(point, Float64Vector2D.E1);
         ParameterRange = parameterRange;
@@ -53,7 +52,7 @@ public class ConstantCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler2D(IFloat64Vector2D point, IFloat64Vector2D tangent, Float64Range1D parameterRange)
+    public ConstantCurveSampler2D(IFloat64Vector2D point, IFloat64Vector2D tangent, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve2D.Create(point, tangent);
         ParameterRange = parameterRange;
@@ -70,7 +69,7 @@ public class ConstantCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler2D SetCurve(IFloat64Vector2D point, Float64Range1D parameterRange)
+    public ConstantCurveSampler2D SetCurve(IFloat64Vector2D point, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve2D.Create(point, Float64Vector2D.E1);
         ParameterRange = parameterRange;
@@ -81,7 +80,7 @@ public class ConstantCurveSampler2D :
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ConstantCurveSampler2D SetCurve(IFloat64Vector2D point, IFloat64Vector2D tangent, Float64Range1D parameterRange)
+    public ConstantCurveSampler2D SetCurve(IFloat64Vector2D point, IFloat64Vector2D tangent, Float64ScalarRange parameterRange)
     {
         ConstantCurve = ConstantParametricCurve2D.Create(point, tangent);
         ParameterRange = parameterRange;
@@ -92,14 +91,14 @@ public class ConstantCurveSampler2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<double> GetParameterValues()
+    public IEnumerable<Float64Scalar> GetParameterValues()
     {
         yield return ParameterRange.MinValue;
         yield return ParameterRange.MaxValue;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public IEnumerable<Float64Range1D> GetParameterSections()
+    public IEnumerable<Float64ScalarRange> GetParameterSections()
     {
         yield return ParameterRange;
     }

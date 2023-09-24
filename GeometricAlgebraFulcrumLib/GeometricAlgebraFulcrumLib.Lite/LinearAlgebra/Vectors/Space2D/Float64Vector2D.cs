@@ -86,12 +86,6 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Float64Vector2D CreateUnitVector(Float64Scalar x, Float64Scalar y)
-        {
-            return new Float64Vector2D(x, y).ToUnitVector();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64Vector2D Create(IPair<double> tuple)
         {
             return new Float64Vector2D(tuple.Item1, tuple.Item2);
@@ -113,6 +107,34 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
                 length * angle.Cos(), 
                 length * angle.Sin()
             );
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector2D CreateEqualXy(double x)
+        {
+            var scalar = new Float64Scalar(x);
+
+            return new Float64Vector2D(scalar, scalar);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector2D CreateUnitVector(double x, double y)
+        {
+            var s = x * x + y * y;
+
+            if (s.IsZero()) return UnitSymmetric;
+
+            s = 1d / Math.Sqrt(s);
+
+            return new Float64Vector2D(x * s, y * s);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Float64Vector2D CreateSymmetricVector(double vectorLength)
+        {
+            var scalar = new Float64Scalar(vectorLength / 2d.Sqrt());
+
+            return new Float64Vector2D(scalar, scalar);
         }
 
 
@@ -173,7 +195,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Float64Vector2D operator /(Float64Vector2D v1, double s)
         {
-            s = Float64Scalar.One / s;
+            s = 1d / s;
 
             return new Float64Vector2D(v1.X * s, v1.Y * s);
         }
@@ -325,13 +347,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Float64Vector2D Dual2D()
+        public Float64Vector2D Normal2D()
         {
             return Float64Vector2D.Create(-Scalar2, Scalar1);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Float64Vector2D Dual2D(Float64Scalar scalingFactor)
+        public Float64Vector2D Normal2D(Float64Scalar scalingFactor)
         {
             return Float64Vector2D.Create(
                 -Scalar2 * scalingFactor,
@@ -340,17 +362,32 @@ namespace GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Float64Vector2D UnDual2D()
+        public Float64Vector2D Dual2D()
         {
             return Float64Vector2D.Create(Scalar2, -Scalar1);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Vector2D Dual2D(Float64Scalar scalingFactor)
+        {
+            return Float64Vector2D.Create(
+                Scalar2 * scalingFactor,
+                -Scalar1 * scalingFactor
+            );
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Float64Vector2D UnDual2D()
+        {
+            return Float64Vector2D.Create(-Scalar2, Scalar1);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Float64Vector2D UnDual2D(Float64Scalar scalingFactor)
         {
             return Float64Vector2D.Create(
-                Scalar2 * scalingFactor,
-                -Scalar1 * scalingFactor
+                -Scalar2 * scalingFactor,
+                Scalar1 * scalingFactor
             );
         }
 

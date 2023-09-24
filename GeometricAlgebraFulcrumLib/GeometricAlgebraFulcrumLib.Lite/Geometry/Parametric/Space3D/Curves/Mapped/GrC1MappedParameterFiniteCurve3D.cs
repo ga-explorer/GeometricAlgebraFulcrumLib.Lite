@@ -1,6 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
@@ -17,8 +15,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Map
         /// </summary>
         public Func<double, double> ParameterMapping { get; }
 
-        public Float64Range1D ParameterRange
-            => Float64Range1D.ZeroToOne;
+        public Float64ScalarRange ParameterRange
+            => Float64ScalarRange.ZeroToOne;
         
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

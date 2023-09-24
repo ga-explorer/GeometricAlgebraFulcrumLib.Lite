@@ -142,7 +142,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Bas
             throw new NotImplementedException();
         }
 
-        public GrVisualRightAngle3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualRightAngle3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
 

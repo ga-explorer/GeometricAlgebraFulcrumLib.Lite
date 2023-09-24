@@ -7,6 +7,7 @@ using DataStructuresLib.IndexSets;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Basis;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Multivectors.Composers;
 using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Processors;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Multivectors
 {
@@ -168,6 +169,19 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Mult
                 ).ToDictionary();
 
             return Processor.CreateBivector(idScalarDictionary);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public XGaFloat64Bivector RemoveSmallTerms(double epsilon = 1e-12)
+        {
+            if (Count <= 1) return this;
+
+            var scalarThreshold = 
+                epsilon.Abs() * Scalars.Max(s => s.Abs());
+
+            return GetPart((double s) => 
+                s <= -scalarThreshold || s >= scalarThreshold
+            );
         }
 
 

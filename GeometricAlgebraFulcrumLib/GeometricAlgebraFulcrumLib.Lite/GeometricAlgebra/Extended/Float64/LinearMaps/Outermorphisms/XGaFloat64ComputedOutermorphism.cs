@@ -102,18 +102,7 @@ public sealed class XGaFloat64ComputedOutermorphism :
 
         return composer.GetHigherKVector(kVector.Grade);
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override XGaFloat64KVector OmMap(XGaFloat64KVector kVector)
-    {
-        var composer = Processor.CreateComposer();
-
-        foreach (var (id, scalar) in kVector)
-            composer.AddMultivector(OmMapBasisBlade(id), scalar);
-
-        return composer.GetKVector(kVector.Grade);
-    }
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override XGaFloat64Multivector OmMap(XGaFloat64Multivector multivector)
     {

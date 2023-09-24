@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using MathNet.Numerics;
@@ -34,41 +35,98 @@ public static class Float64Vector2DUtils
         );
     }
 
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNearParallelTo(this IFloat64Vector2D v1, IFloat64Vector2D v2, double epsilon = 1e-12d)
-    {
-        return (v1.X * v2.Y - v1.Y * v2.X).IsNearZero(epsilon);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNearNormalTo(this IFloat64Vector2D v1, IFloat64Vector2D v2, double epsilon = 1e-12d)
-    {
-        return (v1.X * v2.X + v1.Y * v2.Y).IsNearZero(epsilon);
-    }
     
-    /// <summary>
-    /// True of the Euclidean squared length of this vector is near unity
-    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsUnitVector(this IFloat64Vector2D vector)
+    public static bool IsZero(this IFloat64Vector2D vector)
     {
-        return vector
-            .ENormSquared()
-            .IsOne();
+        return vector.ENorm().IsZero();
     }
 
-    /// <summary>
-    /// True of the Euclidean squared length of this vector is near zero
-    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsZeroVector(this IFloat64Vector2D vector)
+    public static bool IsNearZero(this IFloat64Vector2D vector, double epsilon = 1e-12)
     {
-        return vector
-            .ENormSquared()
-            .IsZero();
+        return vector.ENorm().IsNearZero(epsilon);
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearUnit(this IFloat64Vector2D vector, double epsilon = 1e-12)
+    {
+        return vector.ENormSquared().IsNearOne(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearOrthonormalWith(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        return vector1.IsNearUnit(epsilon) &&
+               vector2.IsNearUnit(epsilon) &&
+               vector1.ESp(vector2).IsNearZero(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearOrthonormalWithUnit(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        Debug.Assert(
+            vector2.IsNearUnit(epsilon)
+        );
+
+        return vector1.IsNearUnit(epsilon) &&
+               vector1.ESp(vector2).IsNearZero(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearParallelTo(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        return vector1.GetAngleCos(vector2).Abs().IsNearOne(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearOppositeTo(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        return vector1.GetAngleCos(vector2).IsNearMinusOne(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearParallelToUnit(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        return vector1.GetAngleCosWithUnit(vector2).Abs().IsNearOne(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearOppositeToUnit(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        return vector1.GetAngleCosWithUnit(vector2).IsNearNegativeOne(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearOrthogonalTo(this IFloat64Vector2D vector1, IFloat64Vector2D vector2, double epsilon = 1e-12)
+    {
+        return vector1.ESp(vector2).IsNearZero(epsilon);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsVectorBasis(this IFloat64Vector2D vector, int basisIndex)
+    {
+        return basisIndex switch
+        {
+            0 => vector.X.IsOne() && vector.Y.IsZero(),
+            1 => vector.X.IsZero() && vector.Y.IsOne(),
+            _ => false
+        };
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearVectorBasis(this IFloat64Vector2D vector, int basisIndex, double epsilon = 1e-12d)
+    {
+        var vector2 = basisIndex switch
+        {
+            0 => Float64Vector2D.E1,
+            1 => Float64Vector2D.E2,
+            _ => throw new InvalidOperationException()
+        };
+
+        return (vector - vector2).IsNearZero(epsilon);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsFinite(this IFloat64Vector2D tuple)
     {
@@ -145,6 +203,38 @@ public static class Float64Vector2DUtils
             v1.Y * v2);
     }
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float64Vector2D DivideByNorm(this IFloat64Vector2D vector)
+    {
+        var norm = vector.ENorm();
+
+        return norm.IsZero() 
+            ? vector.ToVector2D() 
+            : vector.Divide(norm);
+    }
+    
+    /// <summary>
+    /// True of the Euclidean squared length of this vector is near unity
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsUnitVector(this IFloat64Vector2D vector)
+    {
+        return vector
+            .ENormSquared()
+            .IsOne();
+    }
+
+    /// <summary>
+    /// True of the Euclidean squared length of this vector is near unity
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNearUnitVector(this IFloat64Vector2D vector, double epsilon = 1e-12)
+    {
+        return vector
+            .ENormSquared()
+            .IsNearEqual(1.0d, epsilon);
+    }
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Tuple<double, Float64Vector2D> ToLengthAndUnitDirection(this IFloat64Vector2D vector)

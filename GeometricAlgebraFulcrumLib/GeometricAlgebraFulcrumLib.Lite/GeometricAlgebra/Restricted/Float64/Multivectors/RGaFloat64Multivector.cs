@@ -127,6 +127,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         public abstract bool IsVector();
 
         public abstract bool IsBivector();
+        
+        public abstract bool IsTrivector();
 
         public abstract bool IsKVector(int grade);
     
@@ -218,6 +220,12 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Mu
         public abstract RGaFloat64Scalar GetScalarPart();
 
         public abstract RGaFloat64Vector GetVectorPart();
+
+        public abstract RGaFloat64Vector GetVectorPart(Func<int, bool> filterFunc);
+        
+        public abstract RGaFloat64Vector GetVectorPart(Func<double, bool> filterFunc);
+        
+        public abstract RGaFloat64Vector GetVectorPart(Func<int, double, bool> filterFunc);
 
         public abstract RGaFloat64Bivector GetBivectorPart();
 

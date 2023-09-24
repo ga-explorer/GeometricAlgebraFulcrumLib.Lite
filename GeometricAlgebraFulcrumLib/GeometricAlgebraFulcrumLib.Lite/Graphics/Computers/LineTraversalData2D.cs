@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
@@ -52,7 +51,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers
             ParameterMaxValue = double.PositiveInfinity;
         }
 
-        internal LineTraversalData2D(ILine2D line, Float64Range1D paramRange)
+        internal LineTraversalData2D(ILine2D line, Float64ScalarRange paramRange)
         {
             Origin[0] = line.OriginX;
             Origin[1] = line.OriginY;
@@ -100,8 +99,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers
         }
 
 
-        public Float64Range1D ParameterRange
-            => Float64Range1D.Create(ParameterMinValue, ParameterMaxValue);
+        public Float64ScalarRange ParameterRange
+            => Float64ScalarRange.Create(ParameterMinValue, ParameterMaxValue);
         
 
         public LineSegment2D GetLineSegment()

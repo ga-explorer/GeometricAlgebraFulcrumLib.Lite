@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.Differential.Functions;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space4D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using MathNet.Numerics;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space4D.Curves
@@ -57,8 +57,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space4D.Curves
 
         public Func<double, Float64Vector4D>? GetTangentFunc { get; }
         
-        public Float64Range1D ParameterRange 
-            => Float64Range1D.Infinite;
+        public Float64ScalarRange ParameterRange 
+            => Float64ScalarRange.Infinite;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

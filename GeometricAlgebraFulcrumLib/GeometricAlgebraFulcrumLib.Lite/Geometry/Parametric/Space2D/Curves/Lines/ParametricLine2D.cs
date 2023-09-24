@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Lines
 {
@@ -12,8 +11,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Lin
 
         public Float64Vector2D Vector { get; }
 
-        public Float64Range1D ParameterRange
-            => Float64Range1D.Infinite;
+        public Float64ScalarRange ParameterRange
+            => Float64ScalarRange.Infinite;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -34,8 +33,10 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Lin
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Float64Vector2D GetPoint(double parameterValue)
         {
-            return Float64Vector2D.Create(Point.X + parameterValue * Vector.X,
-                Point.Y + parameterValue * Vector.Y);
+            return Float64Vector2D.Create(
+                Point.X + parameterValue * Vector.X,
+                Point.Y + parameterValue * Vector.Y
+            );
         }
 
         public Float64Vector2D GetTangent(double parameterValue)

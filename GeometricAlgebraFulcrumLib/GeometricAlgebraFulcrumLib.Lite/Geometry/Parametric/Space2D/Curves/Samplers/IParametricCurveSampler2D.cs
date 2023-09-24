@@ -1,6 +1,5 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Frames;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Samplers
 {
@@ -10,13 +9,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves.Sam
     {
         IParametricCurve2D Curve { get; }
 
-        Float64Range1D ParameterRange { get; }
+        Float64ScalarRange ParameterRange { get; }
         
         bool IsPeriodic { get; }
 
-        IEnumerable<double> GetParameterValues();
+        IEnumerable<Float64Scalar> GetParameterValues();
 
-        IEnumerable<Float64Range1D> GetParameterSections();
+        IEnumerable<Float64ScalarRange> GetParameterSections();
 
         IEnumerable<Float64Vector2D> GetPoints();
 

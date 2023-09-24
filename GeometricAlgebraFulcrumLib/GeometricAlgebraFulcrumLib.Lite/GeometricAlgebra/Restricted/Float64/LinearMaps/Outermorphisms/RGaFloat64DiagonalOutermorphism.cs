@@ -166,19 +166,14 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Li
 
         public RGaFloat64KVector OmMap(RGaFloat64KVector kVector)
         {
-            var composer = Processor.CreateComposer();
-
-            foreach (var (id, scalar) in kVector)
+            return kVector switch
             {
-                var mv = OmMapBasisBlade(id);
-
-                if (mv.IsZero)
-                    continue;
-
-                composer.AddMultivector(mv, scalar);
-            }
-
-            return composer.GetKVector(kVector.Grade);
+                RGaFloat64Scalar s => s,
+                RGaFloat64Vector v => OmMap(v),
+                RGaFloat64Bivector bv => OmMap(bv),
+                RGaFloat64HigherKVector kv => OmMap(kv),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         public RGaFloat64Multivector OmMap(RGaFloat64Multivector multivector)

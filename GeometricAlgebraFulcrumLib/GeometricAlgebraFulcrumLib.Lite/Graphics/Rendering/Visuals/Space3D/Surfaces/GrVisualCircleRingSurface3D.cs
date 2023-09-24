@@ -78,7 +78,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             );
         }
         
-        public static GrVisualCircleRingSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D normal, GrVisualAnimatedVector1D minRadius, GrVisualAnimatedVector1D maxRadius, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualCircleRingSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D normal, GrVisualAnimatedScalar minRadius, GrVisualAnimatedScalar maxRadius)
         {
             return new GrVisualCircleRingSurface3D(
                 name, 
@@ -87,13 +87,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
                 Float64Vector3D.E2, 
                 0.5d, 
                 1d,
-                animationSpecs
+                normal.AnimationSpecs
             ).SetAnimatedNormal(normal)
                 .SetAnimatedMinRadius(minRadius)
                 .SetAnimatedMaxRadius(maxRadius);
         }
         
-        public static GrVisualCircleRingSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D center, GrVisualAnimatedVector3D normal, GrVisualAnimatedVector1D minRadius, GrVisualAnimatedVector1D maxRadius, GrVisualAnimationSpecs animationSpecs)
+        public static GrVisualCircleRingSurface3D CreateAnimated(string name, GrVisualSurfaceStyle3D style, GrVisualAnimatedVector3D center, GrVisualAnimatedVector3D normal, GrVisualAnimatedScalar minRadius, GrVisualAnimatedScalar maxRadius)
         {
             return new GrVisualCircleRingSurface3D(
                 name, 
@@ -102,7 +102,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
                 Float64Vector3D.E2, 
                 0.5d, 
                 1d,
-                animationSpecs
+                center.AnimationSpecs
             ).SetAnimatedCenter(center)
                 .SetAnimatedNormal(normal)
                 .SetAnimatedMinRadius(minRadius)
@@ -122,9 +122,9 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
 
         public GrVisualAnimatedVector3D? AnimatedNormal { get; set; }
 
-        public GrVisualAnimatedVector1D? AnimatedMinRadius { get; set; }
+        public GrVisualAnimatedScalar? AnimatedMinRadius { get; set; }
         
-        public GrVisualAnimatedVector1D? AnimatedMaxRadius { get; set; }
+        public GrVisualAnimatedScalar? AnimatedMaxRadius { get; set; }
 
 
         private GrVisualCircleRingSurface3D(string name, GrVisualSurfaceStyle3D style, IFloat64Vector3D center, IFloat64Vector3D normal, double minRadius, double maxRadius, GrVisualAnimationSpecs animationSpecs) 
@@ -148,9 +148,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
                    MaxRadius.IsValid() &&
                    MinRadius > 0 && 
                    MinRadius < MaxRadius &&
-                   GetAnimatedGeometries().All(g => 
-                       g.IsValid(AnimationSpecs.TimeRange)
-                   );
+                   GetAnimatedGeometries().All(g => g.IsValid());
         }
         
         public double GetInnerEdgeLength()
@@ -199,7 +197,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             return new Triplet<Float64Vector3D>(point1, point2, point3);
         }
 
-        public GrVisualCircleRingSurface3D SetAnimatedVisibility(GrVisualAnimatedVector1D visibility)
+        public GrVisualCircleRingSurface3D SetAnimatedVisibility(GrVisualAnimatedScalar visibility)
         {
             AnimatedVisibility = visibility;
             
@@ -220,21 +218,21 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
             return this;
         }
         
-        public GrVisualCircleRingSurface3D SetAnimatedMinRadius(GrVisualAnimatedVector1D radius)
+        public GrVisualCircleRingSurface3D SetAnimatedMinRadius(GrVisualAnimatedScalar radius)
         {
             AnimatedMinRadius = radius;
             
             return this;
         }
         
-        public GrVisualCircleRingSurface3D SetAnimatedMaxRadius(GrVisualAnimatedVector1D radius)
+        public GrVisualCircleRingSurface3D SetAnimatedMaxRadius(GrVisualAnimatedScalar radius)
         {
             AnimatedMaxRadius = radius;
             
             return this;
         }
 
-        public GrVisualCircleRingSurface3D SetAnimatedCenterNormalRadius(GrVisualAnimatedVector3D center, GrVisualAnimatedVector3D normal, GrVisualAnimatedVector1D minRadius, GrVisualAnimatedVector1D maxRadius)
+        public GrVisualCircleRingSurface3D SetAnimatedCenterNormalRadius(GrVisualAnimatedVector3D center, GrVisualAnimatedVector3D normal, GrVisualAnimatedScalar minRadius, GrVisualAnimatedScalar maxRadius)
         {
             AnimatedCenter = center;
             AnimatedNormal = normal;
@@ -284,21 +282,21 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Rendering.Visuals.Space3D.Sur
         {
             return AnimationSpecs.IsStatic || AnimatedMinRadius is null
                 ? MinRadius
-                : AnimatedMinRadius.GetPoint(time);
+                : AnimatedMinRadius.GetValue(time);
         }
         
         public double GetMaxRadius(double time)
         {
             return AnimationSpecs.IsStatic || AnimatedMaxRadius is null
                 ? MaxRadius
-                : AnimatedMaxRadius.GetPoint(time);
+                : AnimatedMaxRadius.GetValue(time);
         }
 
         public IEnumerable<KeyFrameRecord> GetKeyFrameRecords()
         {
             Debug.Assert(IsValid());
 
-            foreach (var frameIndex in KeyFrameRange)
+            foreach (var frameIndex in GetValidFrameIndexSet())
             {
                 var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

@@ -1,6 +1,5 @@
 ﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Tuples;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space2D;
 using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
@@ -14,11 +13,11 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D
             return new AccGridLineTraverser2D(
                 grid, 
                 line, 
-                Float64Range1D.Infinite
+                Float64ScalarRange.Infinite
             );
         }
 
-        public static AccGridLineTraverser2D Create(IAccGrid2D<IFiniteGeometricShape2D> grid, ILine2D line, Float64Range1D lineParamLimits)
+        public static AccGridLineTraverser2D Create(IAccGrid2D<IFiniteGeometricShape2D> grid, ILine2D line, Float64ScalarRange lineParamLimits)
         {
             return new AccGridLineTraverser2D(grid, line, lineParamLimits);
         }
@@ -28,7 +27,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D
 
         public ILine2D Line { get; }
 
-        public Float64Range1D LineParameterLimits { get; }
+        public Float64ScalarRange LineParameterLimits { get; }
 
         /// <summary>
         /// Indicates if there are no cells to traverse in the grid
@@ -38,7 +37,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D
         /// <summary>
         /// The limits of the line parameter intersecting the grid boundary
         /// </summary>
-        public Float64Range1D TLimits { get; }
+        public Float64ScalarRange TLimits { get; }
 
         /// <summary>
         /// Delta value of line parameter in x and y directions
@@ -66,7 +65,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D
         public IntTuple2D CellIndexStop { get; }
 
 
-        private AccGridLineTraverser2D(IAccGrid2D<IFiniteGeometricShape2D> grid, ILine2D line, Float64Range1D lineParamLimits)
+        private AccGridLineTraverser2D(IAccGrid2D<IFiniteGeometricShape2D> grid, ILine2D line, Float64ScalarRange lineParamLimits)
         {
             Grid = grid;
             Line = line;
@@ -112,7 +111,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D
             if (t0 > t1)
             {
                 IsEmpty = true;
-                TLimits = new Float64Range1D();
+                TLimits = new Float64ScalarRange();
                 TDelta = Float64Vector2D.Zero;
 
                 return;
@@ -159,7 +158,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Accelerators.Grids.Space2D
             //}
 
             IsEmpty = false;
-            TLimits = Float64Range1D.Create(t0, t1);
+            TLimits = Float64ScalarRange.Create(t0, t1);
 
             //Compute indices of cell containing line segment first point
             CellIndexStart = grid.PointToCellIndex(point1X, point1Y);

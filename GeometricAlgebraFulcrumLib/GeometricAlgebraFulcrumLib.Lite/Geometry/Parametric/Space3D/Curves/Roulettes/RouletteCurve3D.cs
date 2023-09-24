@@ -1,8 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Frames;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 using GeometricAlgebraFulcrumLib.Lite.Maps.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 using MathNet.Numerics;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Roulettes
@@ -16,7 +15,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Rou
 
         public Float64Vector3D GeneratorPoint { get; }
 
-        public Float64Range1D ParameterRange { get; }
+        public Float64ScalarRange ParameterRange { get; }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -25,7 +24,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Rou
             FixedCurve = fixedCurve;
             MovingCurve = movingCurve;
             GeneratorPoint = movingCurve.GetPoint(movingCurve.ParameterRange.MinValue);
-            ParameterRange = Float64Range1D.Create(0, parameterValueMax);
+            ParameterRange = Float64ScalarRange.Create(0, parameterValueMax);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -34,7 +33,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space3D.Curves.Rou
             FixedCurve = fixedCurve;
             MovingCurve = movingCurve;
             GeneratorPoint = generatorPoint.ToVector3D();
-            ParameterRange = Float64Range1D.Create(0, parameterValueMax);
+            ParameterRange = Float64ScalarRange.Create(0, parameterValueMax);
         }
 
 

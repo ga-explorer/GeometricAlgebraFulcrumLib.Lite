@@ -1,5 +1,5 @@
-﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
-using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space4D;
+﻿using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space4D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space4D.Curves
 {
@@ -9,7 +9,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space4D.Curves
     public interface IParametricCurve4D :
         IGeometricElement
     {
-        Float64Range1D ParameterRange { get; }
+        Float64ScalarRange ParameterRange { get; }
         
         Float64Vector4D GetPoint(double parameterValue);
 

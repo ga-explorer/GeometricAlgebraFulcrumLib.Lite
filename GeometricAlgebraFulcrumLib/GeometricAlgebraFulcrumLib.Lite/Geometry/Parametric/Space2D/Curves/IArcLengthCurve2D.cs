@@ -1,12 +1,14 @@
-﻿namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves
+﻿using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
+
+namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Parametric.Space2D.Curves
 {
     public interface IArcLengthCurve2D :
         IParametricCurve2D
     {
-        double GetLength();
+        Float64Scalar GetLength();
 
-        double ParameterToLength(double parameterValue);
+        Float64Scalar ParameterToLength(double parameterValue);
 
-        double LengthToParameter(double length);
+        Float64Scalar LengthToParameter(double length);
     }
 }

@@ -1,14 +1,14 @@
 ﻿using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines;
 using GeometricAlgebraFulcrumLib.Lite.Geometry.BasicShapes.Lines.Immutable;
-using GeometricAlgebraFulcrumLib.Lite.Geometry.Borders;
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
+using GeometricAlgebraFulcrumLib.Lite.ScalarAlgebra;
 
 namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers
 {
     public sealed class LineTraversalData3D
     {
-        private readonly Stack<Float64Range1D> _parameterRangeStack
-            = new Stack<Float64Range1D>();
+        private readonly Stack<Float64ScalarRange> _parameterRangeStack
+            = new Stack<Float64ScalarRange>();
 
 
         public Float64Vector3D Origin { get; }
@@ -23,8 +23,8 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers
 
         public double ParameterMaxValue { get; private set; }
         
-        public Float64Range1D ParameterRange
-            => Float64Range1D.Create(ParameterMinValue, ParameterMaxValue);
+        public Float64ScalarRange ParameterRange
+            => Float64ScalarRange.Create(ParameterMinValue, ParameterMaxValue);
 
         public bool IsLine 
             => double.IsNegativeInfinity(ParameterMinValue) &&
@@ -62,7 +62,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.Graphics.Computers
         internal LineTraversalData3D StoreParameterRange(double newMinValue, double newMaxValue)
         {
             _parameterRangeStack.Push(
-                Float64Range1D.Create(ParameterMinValue, ParameterMaxValue)
+                Float64ScalarRange.Create(ParameterMinValue, ParameterMaxValue)
             );
 
             ParameterMinValue = newMinValue;

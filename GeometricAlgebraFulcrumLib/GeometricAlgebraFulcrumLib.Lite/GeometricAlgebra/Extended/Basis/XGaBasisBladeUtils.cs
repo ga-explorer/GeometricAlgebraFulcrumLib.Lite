@@ -17,13 +17,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Basis
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //public static EGaTerm<T> ToTerm<T>(this EGaBasisBlade basisBlade, Scalar<T> scalar)
         //{
-        //    return GaTermFactoryUtils.ToTerm(basisBlade, scalar);
+        //    return GaTermComposerUtils.ToTerm(basisBlade, scalar);
         //}
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //public static EGaTerm<T> ToTerm<T>(this EGaBasisBlade basisBlade, IScalarProcessor<T> scalarProcessor, T scalarValue)
         //{
-        //    return GaTermFactoryUtils.ToTerm(basisBlade, scalarProcessor, scalarValue);
+        //    return GaTermComposerUtils.ToTerm(basisBlade, scalarProcessor, scalarValue);
         //}
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,7 +36,7 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Basis
         //        _ => scalarProcessor.CreateScalarMinusOne()
         //    };
 
-        //    return GaTermFactoryUtils.ToTerm(term.BasisBlade, scalar);
+        //    return GaTermComposerUtils.ToTerm(term.BasisBlade, scalar);
         //}
     
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -49,13 +49,13 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Basis
         //        _ => scalarProcessor.CreateScalar(scalarProcessor.Negative(scalarValue))
         //    };
 
-        //    return GaTermFactoryUtils.ToTerm(term.BasisBlade, scalar);
+        //    return GaTermComposerUtils.ToTerm(term.BasisBlade, scalar);
         //}
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         //public static EGaTerm<T> ToTerm<T>(this EGaSignedBasisBlade term, Scalar<T> scalar)
         //{
-        //    return GaTermFactoryUtils.ToTerm(term.BasisBlade, scalar * term.Sign);
+        //    return GaTermComposerUtils.ToTerm(term.BasisBlade, scalar * term.Sign);
         //}
     
 

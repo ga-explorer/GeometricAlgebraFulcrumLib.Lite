@@ -166,22 +166,18 @@ namespace GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Extended.Float64.Line
 
             return composer.GetHigherKVector(kVector.Grade);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public XGaFloat64KVector OmMap(XGaFloat64KVector kVector)
         {
-            var composer = Processor.CreateComposer();
-
-            foreach (var (id, scalar) in kVector)
+            return kVector switch
             {
-                var mv = OmMapBasisBlade(id);
-
-                if (mv.IsZero)
-                    continue;
-
-                composer.AddMultivector(mv, scalar);
-            }
-
-            return composer.GetKVector(kVector.Grade);
+                XGaFloat64Scalar s => s,
+                XGaFloat64Vector v => OmMap(v),
+                XGaFloat64Bivector bv => OmMap(bv),
+                XGaFloat64HigherKVector kv => OmMap(kv),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         public XGaFloat64Multivector OmMap(XGaFloat64Multivector multivector)

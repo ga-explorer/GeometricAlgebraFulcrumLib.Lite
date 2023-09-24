@@ -43,7 +43,7 @@ public abstract class GrVisualCurveWithAnimation3D :
     {
         Debug.Assert(IsValid());
 
-        foreach (var frameIndex in KeyFrameRange)
+        foreach (var frameIndex in GetValidFrameIndexSet())
         {
             var time = (double)frameIndex / AnimationSpecs.FrameRate;
                 

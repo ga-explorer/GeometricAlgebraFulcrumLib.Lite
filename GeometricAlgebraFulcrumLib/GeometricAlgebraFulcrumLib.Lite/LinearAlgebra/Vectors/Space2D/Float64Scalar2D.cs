@@ -225,13 +225,19 @@ public sealed record Float64Scalar2D :
     }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Float64Bivector2D Dual()
+    public Float64Bivector2D Normal2D()
     {
         return Float64Bivector2D.Create(Scalar);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Float64Bivector2D Dual2D()
+    {
+        return Float64Bivector2D.Create(-Scalar);
+    }
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Float64Bivector2D UnDual()
+    public Float64Bivector2D UnDual2D()
     {
         return Float64Bivector2D.Create(Scalar);
     }
