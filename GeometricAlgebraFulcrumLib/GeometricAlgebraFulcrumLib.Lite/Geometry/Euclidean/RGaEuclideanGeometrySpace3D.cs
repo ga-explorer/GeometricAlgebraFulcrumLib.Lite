@@ -4,26 +4,27 @@ using GeometricAlgebraFulcrumLib.Lite.GeometricAlgebra.Restricted.Float64.Multiv
 using GeometricAlgebraFulcrumLib.Lite.LinearAlgebra.Vectors.Space3D;
 using System.Runtime.CompilerServices;
 
-namespace GeometricAlgebraFulcrumLib.Lite.Geometry;
+namespace GeometricAlgebraFulcrumLib.Lite.Geometry.Euclidean;
 
-public class EGa3D : 
+public class RGaEuclideanGeometrySpace3D :
     RGaEuclideanGeometrySpace
 {
-    public static EGa3D Instance { get; } = new EGa3D();
+    public static RGaEuclideanGeometrySpace3D Instance { get; } 
+        = new RGaEuclideanGeometrySpace3D();
 
 
     public RGaFloat64Vector E3 { get; }
-    
+
     public RGaFloat64Bivector E13 { get; }
 
     public RGaFloat64Bivector E23 { get; }
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private EGa3D() : base(3)
+    private RGaEuclideanGeometrySpace3D() : base(3)
     {
         E3 = EuclideanProcessor.CreateTermVector(2);
-        
+
         E13 = EuclideanProcessor.CreateTermBivector(0, 2);
         E23 = EuclideanProcessor.CreateTermBivector(1, 2);
 
@@ -35,7 +36,7 @@ public class EGa3D :
     {
         return Processor.CreateVector(x, y, z);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Bivector EncodeBivector(double xy, double xz, double yz)
     {
@@ -48,7 +49,7 @@ public class EGa3D :
             }
         );
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public RGaFloat64Bivector EncodeBivector(Float64Bivector3D bivector)
     {
@@ -82,7 +83,7 @@ public class EGa3D :
             .SetTerm(6UL, -iScalar)
             .GetSimpleMultivector();
     }
-    
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Float64Quaternion DecodeQuaternion(RGaFloat64Multivector mv)
@@ -94,6 +95,6 @@ public class EGa3D :
             mv.Scalar()
         );
     }
-    
+
 
 }
